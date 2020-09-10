@@ -1,0 +1,18 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb-base",
+    "prettier"
+  ],
+  "rules": {
+    "import/no-mutable-exports": 0,
+    "import/prefer-default-export": 0,
+    "no-underscore-dangle": 0,
+    "class-methods-use-this": "off",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "next" }]
+  },
+  "env": {
+    "node": true,
+    "jest": true
+  }
+}

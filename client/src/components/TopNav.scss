@@ -1,0 +1,11 @@
+.TopNav {
+  background-color: #002329;
+  //height: 50px;
+
+  text-align: left;
+
+  a.TopNav-Brand:link, a.TopNav-Brand:visited, a.TopNav-Brand:active {
+    color: #fff;
+    padding: 1rem 1rem;
+  }
+}

@@ -1,0 +1,100 @@
+.App {
+  .ant-layout-header {
+    padding: 0 25px;
+
+    .App-Brand {
+      color: #fff;
+      font-size: 1.3rem;
+      float: left;
+      margin-right: 30px;
+    }
+  }
+
+  .ant-menu .ant-menu-item {
+    font-size: 1rem;
+
+    .anticon {
+      font-size: 18px;
+      margin-right: 8px;
+    }
+  }
+
+  .App-Content {
+    padding: 25px 25px 0;
+
+    .site-layout-content {
+      background: #fff;
+      border-radius: 4px;
+      padding: 25px;
+    }
+  }
+
+  .Content-Filter {
+    margin-bottom: 25px;
+  }
+
+  .Content-Table {
+    .ant-table-thead .ant-table-cell {
+      text-align: center;
+    }
+
+    .Employee-Title {
+      font-size: 0.9rem;
+    }
+
+    .Employee-Subtitle {
+      color: #777;
+      font-size: 0.85rem;
+
+      margin-top: -4px;
+
+      .value {
+        color: #555;
+        //font-weight: bold;
+      }
+
+      .divider {
+        color: #BBB;
+        margin: 0 5px;
+      }
+    }
+  }
+
+  .Table-Title-Left {
+    padding: 4px;
+  }
+
+  .Table-Title-Right {
+    padding-right: 5px;
+  }
+
+  .Table-Title-Month {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+
+  .Table-Title-Datasource {
+    color: #444;
+
+    a.filename:link, a.filename:visited, a.filename:active {
+      color: black;
+      background-color: #EEE;
+      text-decoration: underline;
+
+      display: inline-block;
+      margin: 0 5px 0 3px;
+      padding: 1px 8px;
+
+    }
+
+    a.filename:link, a.filename:visited, a.filename:active {
+
+    }
+  }
+
+  .Table-Title-Right {
+    text-align: right;
+    vertical-align: middle;
+    //height: 100%;
+  }
+}
