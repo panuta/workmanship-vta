@@ -7,6 +7,8 @@ import morgan from 'morgan'
 import path from 'path'
 
 import homeRoutes from './routes/home'
+import apiRoutes from './routes/api'
+
 import { initConfig, config as appConfig } from './config'
 import { initLogger, log } from './log'
 import { initDatabase } from './data/models'
@@ -62,7 +64,7 @@ export default init()
       app.use('/', homeRoutes)
     }
 
-    app.use('/', homeRoutes)
+    app.use('/api', apiRoutes)
 
     // // catch 404 and forward to error handler
     // app.use(function(req, res, next) {

@@ -5,7 +5,7 @@ import ExcelReader from './reader'
 import { Employee, EmployeeAttendance, Shift } from '../../models'
 
 export const processExcelFile = async () => {
-  const reader = new ExcelReader(path.resolve(__dirname, '../../resources/input-08-63-small.xlsx'))
+  const reader = new ExcelReader(path.resolve(__dirname, '../../../resources/input-08-63-small.xlsx'))
 
   const currentMonth = new Date(2020, 7)
 
@@ -24,7 +24,23 @@ export const processExcelFile = async () => {
   // Employee Time Attendance
   const employeeShiftDataList = reader.readEmployeeShifts()
 
-  const allPromises = []
+  // const allPromises = []
+  // employeeShiftDataList.forEach(employeeShiftData => {
+  //   _.range(1, 32).forEach(date => {
+  //     const value = {
+  //       code : employeeShiftData.code,
+  //       attendanceDate: new Date(currentMonth.getFullYear(), currentMonth.getMonth(), date),
+  //       shift: employeeShiftData[date]
+  //     }
+  //
+  //     allPromises.push(EmployeeAttendance.upsert(
+  //       value
+  //     ))
+  //   })
+  // })
+  // await Promise.all(allPromises)
+
+  const values = []
   employeeShiftDataList.forEach(employeeShiftData => {
     _.range(1, 32).forEach(date => {
       const value = {
@@ -33,11 +49,10 @@ export const processExcelFile = async () => {
         shift: employeeShiftData[date]
       }
 
-      allPromises.push(EmployeeAttendance.upsert(
-        value
-      ))
+      values.push(value)
     })
   })
 
-  await Promise.all(allPromises)
+  await EmployeeAttendance.bulkCreate(values, { updateOnDuplicate: ['shift'] })
+
 }

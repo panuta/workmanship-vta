@@ -34,5 +34,5 @@ export const EmployeeAttendance = sequelize.define('EmployeeAttendance', {
 export const initDatabase = async () => {
   await Shift.sync({ alter: true })
   await Employee.sync({ alter: true })
-  await EmployeeAttendance.sync({ alter: true })
+  await EmployeeAttendance.sync({ alter: false })
 }
