@@ -1,10 +1,14 @@
 import express from 'express'
-import path from 'path'
+import { processExcelFile } from '../data/sources/excel/processors'
 
 const router = express.Router()
 
-router.get('/', async (req, res, next) => {
-  res.sendFile(path.join(__dirname, '../static/client/index.html'))
+router.get('/excel', async (req, res, next) => {
+  await processExcelFile()
+
+  // res.sendFile(path.join(__dirname, '../static/client/index.html'))
+
+  res.send("OK")
 })
 
 export default router

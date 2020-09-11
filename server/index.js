@@ -9,10 +9,12 @@ import path from 'path'
 import homeRoutes from './routes/home'
 import { initConfig, config as appConfig } from './config'
 import { initLogger, log } from './log'
+import { initDatabase } from './data/models'
 
 async function init() {
   initConfig()
   initLogger()
+  await initDatabase()
 }
 
 export default init()
@@ -37,15 +39,13 @@ export default init()
 
     app.use(express.static(path.join(__dirname, 'static')))
 
-    app.use('/', homeRoutes)
-
     if (process.env.NODE_ENV !== 'production') {
       log.info('Setting up Webpack Middlewares');
 
       const Webpack = require('webpack')
       const WebpackDevMiddleware = require('webpack-dev-middleware')
       const WebpackHotMiddleware = require('webpack-hot-middleware')
-      const webpackConfig = require('../client/webpack.config')
+      const webpackConfig = require('../webpack.config')
 
       const compiler = Webpack(webpackConfig(process.env))
       app.use(WebpackDevMiddleware(compiler, {
@@ -58,7 +58,11 @@ export default init()
         }
       }))
       app.use(WebpackHotMiddleware(compiler))
+    } else {
+      app.use('/', homeRoutes)
     }
+
+    app.use('/', homeRoutes)
 
     // // catch 404 and forward to error handler
     // app.use(function(req, res, next) {
