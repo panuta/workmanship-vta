@@ -1,8 +1,9 @@
-import express from 'express'
-import { getMonthlyAttendance } from '../controllers/api'
+import { Router } from '@awaitjs/express'
+import { employeeAttendancesTable, process } from '../controllers/api'
 
-const router = express.Router()
+const router = Router()
 
-router.get('/monthlyAttendance', getMonthlyAttendance)
+router.getAsync('/employeeAttendancesTable', employeeAttendancesTable)
+router.postAsync('/process', process)
 
 export default router

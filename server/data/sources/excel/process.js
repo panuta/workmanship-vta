@@ -2,7 +2,7 @@ import _ from 'lodash'
 import path from 'path'
 
 import ExcelReader from './reader'
-import { Employee, EmployeeAttendance, Shift } from '../../models'
+import { Employee, EmployeeAttendance, Shift } from '../../models/definitions'
 
 export const processExcelFile = async () => {
   const reader = new ExcelReader(path.resolve(__dirname, '../../../resources/input-08-63-small.xlsx'))
@@ -23,22 +23,6 @@ export const processExcelFile = async () => {
 
   // Employee Time Attendance
   const employeeShiftDataList = reader.readEmployeeShifts()
-
-  // const allPromises = []
-  // employeeShiftDataList.forEach(employeeShiftData => {
-  //   _.range(1, 32).forEach(date => {
-  //     const value = {
-  //       code : employeeShiftData.code,
-  //       attendanceDate: new Date(currentMonth.getFullYear(), currentMonth.getMonth(), date),
-  //       shift: employeeShiftData[date]
-  //     }
-  //
-  //     allPromises.push(EmployeeAttendance.upsert(
-  //       value
-  //     ))
-  //   })
-  // })
-  // await Promise.all(allPromises)
 
   const values = []
   employeeShiftDataList.forEach(employeeShiftData => {

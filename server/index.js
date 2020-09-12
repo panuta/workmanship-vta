@@ -1,10 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies,global-require */
-// import createError from 'http-errors'
+import _ from 'lodash'
 import cookieParser from 'cookie-parser'
 import express from 'express'
 import http from 'http'
 import morgan from 'morgan'
 import path from 'path'
+import { Router as AsyncRouter } from '@awaitjs/express'
 
 import homeRoutes from './routes/home'
 import apiRoutes from './routes/api'
@@ -27,17 +28,6 @@ export default init()
     app.use(express.json())
     app.use(express.urlencoded({ extended: false }))
     app.use(cookieParser())
-
-    // View Engine
-    // app.set('views', path.join(__dirname, 'templates'))
-    // app.set('view engine', 'ejs')
-
-    // app.use(sassMiddleware({
-    //   src: path.join(__dirname, 'static'),
-    //   dest: path.join(__dirname, 'static'),
-    //   indentedSyntax: false,
-    //   sourceMap: true
-    // }))
 
     app.use(express.static(path.join(__dirname, 'static')))
 
@@ -64,23 +54,18 @@ export default init()
       app.use('/', homeRoutes)
     }
 
-    app.use('/api', apiRoutes)
+    const apiRouter = new AsyncRouter()
+    apiRouter.use(apiRoutes)
 
-    // // catch 404 and forward to error handler
-    // app.use(function(req, res, next) {
-    //   next(createError(404))
-    // })
+    app.use('/api', apiRouter)
 
     // error handler
-    // app.use(function(err, req, res, next) {
-    //   // set locals, only providing error in development
-    //   res.locals.message = err.message
-    //   res.locals.error = req.app.get('env') === 'development' ? err : {}
-    //
-    //   // render the error page
-    //   res.status(err.status || 500)
-    //   res.render('error')
-    // })
+    app.use((err, req, res, next) => {
+      log.error(err.stack)
+      const jsonResponse = { title: err.message, code: err.errorCode || 'INTERNAL_ERROR' }
+      if (!_.isEmpty(err.meta)) jsonResponse.meta = err.meta
+      res.status(err.httpStatus || 500).json(jsonResponse)
+    })
 
     app.disable('x-powered-by')
 

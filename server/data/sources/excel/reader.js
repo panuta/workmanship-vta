@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import XLSX from 'xlsx'
 import { columnRange, readColumnsData } from './utils'
-import { parseDuration } from '../../models/utils'
+import { parseDuration } from '../../utils'
 
 class ExcelReader {
   constructor(filePath) {

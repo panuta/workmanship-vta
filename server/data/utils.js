@@ -1,5 +1,4 @@
-
-// TODO : bulkUpdate base on some key
+import dayjs from 'dayjs'
 
 export const parseDuration = (text) => {
   const [hoursText, minutesText] = text.split('.')
@@ -8,4 +7,8 @@ export const parseDuration = (text) => {
   } catch (error) {
     return null
   }
+}
+
+export const dateToString = date => {
+  return dayjs(date).format('YYYY-MM-DD')
 }

@@ -1,103 +1,40 @@
 import React from 'react'
-import { Button, Table, Row, Col } from 'antd'
+import { Alert, Button, Table, Row, Col, Space } from 'antd'
+import { CloudUploadOutlined } from '@ant-design/icons'
 
-import { Space } from 'antd'
-import {
-  CloudUploadOutlined,
-} from '@ant-design/icons'
+import { apiStates, useApi } from '../hooks/useApi'
 
 import './TimeAttendanceTable.scss'
 
-function TimeAttendanceTable(props) {
-  const colWidth = 80
+const TABLE_COLUMN_WIDTH = 50
+const TABLE_COLUMNS = [
+  {
+    title: 'พนักงาน', key: 'employee', fixed: 'left', width: 350,
+    render: (text, record, index) => (
+      <Space direction="vertical" size={2}>
+        <div className="employee-title">{record.fullName}{ record.nickName && record.nickName !== '-' && <span> ( {record.nickName} )</span> }</div>
+        <div className="employee-subtitle">รหัส: <span className="value">{record.code}</span> <span className="divider">|</span> ตำแหน่ง: <span className="value">{record.position}</span></div>
+      </Space>
+    )
+  },
+  { title: 'สถานะพนักงาน', dataIndex: 'status', key: 'status', align: 'center', width: 140 },
+  { title: 'ใบเตือน', align: 'center', width: TABLE_COLUMN_WIDTH },
+  { title: 'พักร้อน', dataIndex: 'vacation', align: 'center', width: TABLE_COLUMN_WIDTH },
+  { title: 'ลาป่วย', key: '', width: TABLE_COLUMN_WIDTH },
+  { title: 'ลากิจ', key: '', width: TABLE_COLUMN_WIDTH },
+  { title: (<span>ลากิจ<br/>(หักเงิน)</span>), key: '', width: TABLE_COLUMN_WIDTH },
+  { title: 'สะสม', key: '', width: TABLE_COLUMN_WIDTH },
+  { title: 'ใช้สะสม', key: '', width: TABLE_COLUMN_WIDTH },
+  { title: (<span>หนี้<br/>(สั่งหยุด)</span>), key: '', width: TABLE_COLUMN_WIDTH },
+  { title: (<span>ใช้คืน<br/>(สั่งหยุด)</span>), key: '', width: TABLE_COLUMN_WIDTH },
+  { title: (<span>สาย<br/>(นาที)</span>), key: '', width: TABLE_COLUMN_WIDTH },
+  { title: (<span>ออกก่อน<br/>(นาที)</span>), key: '', width: TABLE_COLUMN_WIDTH },
+  { title: 'ขาด', key: '', width: TABLE_COLUMN_WIDTH },
+  { title: 'เบี้ยขยัน', key: '', width: TABLE_COLUMN_WIDTH },
+]
 
-  const tableColumns = [
-    {
-      title: 'พนักงาน',
-      key: 'employee',
-      fixed: 'left',
-      width: 350,
-      render: (text, record, index) => (
-        <Space direction="vertical" size={2}>
-          <div className="employee-title">{record.employeeFullName} ({record.employeeNickName})</div>
-          <div className="employee-subtitle">รหัส: <span className="value">{record.employeeCode}</span> <span className="divider">|</span> ตำแหน่ง: <span className="value">{record.employeePosition}</span></div>
-        </Space>
-      )
-    },
-    {
-      title: 'สถานะพนักงาน',
-      dataIndex: 'employeeStatus',
-      key: 'employeeStatus',
-      align: 'center',
-      width: 140
-    },
-    {
-      title: 'ใบเตือน',
-      align: 'center',
-      width: colWidth
-    },
-    {
-      title: 'พักร้อน',
-      width: colWidth
-    },
-    {
-      title: 'ลาป่วย',
-      key: '',
-      width: colWidth
-    },
-    {
-      title: 'ลากิจ',
-      key: '',
-      width: colWidth
-    },
-    {
-      title: (<span>ลากิจ<br/>(หักเงิน)</span>),
-      key: '',
-      width: colWidth
-    },
-    {
-      title: 'สะสม',
-      key: '',
-      width: colWidth
-    },
-    {
-      title: 'ใช้สะสม',
-      key: '',
-      width: colWidth
-    },
-    {
-      title: (<span>หนี้<br/>(สั่งหยุด)</span>),
-      key: '',
-      width: colWidth
-    },
-    {
-      title: (<span>ใช้คืน<br/>(สั่งหยุด)</span>),
-      key: '',
-      width: colWidth
-    },
-    {
-      title: (<span>สาย<br/>(นาที)</span>),
-      key: '',
-      width: colWidth
-    },
-    {
-      title: (<span>ออกก่อน<br/>(นาที)</span>),
-      key: '',
-      width: colWidth
-    },
-    {
-      title: 'ขาด',
-      key: '',
-      width: colWidth
-    },
-    {
-      title: 'เบี้ยขยัน',
-      key: '',
-      width: colWidth
-    },
-  ]
-
-  const tableTitleComponent = () => (
+const renderTableTitle = () => {
+  return (
     <Row align="middle" className="table-title">
       <Col span={8} className="table-title-left">
         <Space direction="vertical" size={2}>
@@ -116,10 +53,34 @@ function TimeAttendanceTable(props) {
       </Col>
     </Row>
   )
+}
 
+const renderOnLoading = () => {
   return (
-    <Table bordered columns={tableColumns} dataSource={props.data} size="small" pagination={false} scroll={{x: "100%"}} className="time-attendance-table" title={tableTitleComponent} />
+    <Table bordered loading columns={TABLE_COLUMNS} size="small" pagination={false} scroll={{x: "100%"}} className="time-attendance-table" title={renderTableTitle} />
   )
+}
+
+const renderOnSuccess = (data) => {
+  return (
+    <Table bordered columns={TABLE_COLUMNS} dataSource={data} size="small" pagination={false} scroll={{x: "100%"}} className="time-attendance-table" title={renderTableTitle} />
+  )
+}
+
+const TimeAttendanceTable = (props) => {
+
+  // TODO : props will tell which month to load data
+
+  const { state, error, data } = useApi('/api/employeeAttendancesTable?month=8&year=2020')
+
+  switch (state) {
+    case apiStates.ERROR:
+      return <Alert message='Error occurred while loading data' description={error} type='error' showIcon />
+    case apiStates.SUCCESS:
+      return renderOnSuccess(data.data)
+    default:
+      return renderOnLoading()
+  }
 }
 
 export default TimeAttendanceTable

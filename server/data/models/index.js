@@ -1,38 +1,41 @@
-import path from 'path'
-import { Sequelize, DataTypes } from 'sequelize'
-
-const sequelize = new Sequelize({ dialect: 'sqlite', storage: path.resolve(__dirname, '../../database.sqlite') })
-
-export const Shift = sequelize.define('Shift', {
-  code: { type: DataTypes.STRING, allowNull: false },
-  start: { type: DataTypes.STRING },
-  end: { type: DataTypes.STRING },
-  break: { type: DataTypes.INTEGER }
-})
-
-export const Employee = sequelize.define('Employee', {
-  code: { type: DataTypes.STRING, allowNull: false },
-  salutation: { type: DataTypes.STRING },
-  fullName: { type: DataTypes.STRING, allowNull: false },
-  nickName: { type: DataTypes.STRING },
-  company: { type: DataTypes.STRING, allowNull: false },
-  status: { type: DataTypes.STRING, allowNull: false },
-  department: { type: DataTypes.STRING, allowNull: false },
-  position: { type: DataTypes.STRING },
-  startDate: { type: DataTypes.DATEONLY, allowNull: false },
-  terminationDate: { type: DataTypes.DATEONLY }
-})
-
-export const EmployeeAttendance = sequelize.define('EmployeeAttendance', {
-  code: { type: DataTypes.STRING, allowNull: false, unique: 'compositeIndex' },
-  attendanceDate: { type: DataTypes.DATEONLY, allowNull: false, unique: 'compositeIndex' },
-  shift: { type: DataTypes.STRING }
-}, {
-  indexes: [{ unique: true, fields: ['code', 'attendanceDate'] }]
-})
+import _ from 'lodash'
+import dayjs from 'dayjs'
+import { Op } from 'sequelize'
+import { Employee, EmployeeAttendance, Shift } from './definitions'
+import { dateToString } from '../utils'
 
 export const initDatabase = async () => {
-  await Shift.sync({ alter: true })
-  await Employee.sync({ alter: true })
+  await Shift.sync({ alter: false })
+  await Employee.sync({ alter: false })
   await EmployeeAttendance.sync({ alter: false })
+}
+
+export const findEmployees = async (activeInMonth) => {
+  if(_.isDate(activeInMonth)) {
+    return Employee.findAll({
+      where: {
+        terminationDate: {
+          [Op.or]: {
+            [Op.is]: null,
+            [Op.gte]: dateToString(new Date(activeInMonth.getFullYear(), activeInMonth.getMonth(), 1)),
+          }
+        }
+      }
+    })
+  }
+  return Employee.findAll()
+}
+
+export const findEmployeeAttendances = async (attendanceMonth) => {
+  const date = dayjs(attendanceMonth)
+  const attendanceStart = date.startOf('month').toDate()
+  const attendanceEnd = date.endOf('month').toDate()
+
+  return EmployeeAttendance.findAll({
+    where: {
+      attendanceDate: {
+        [Op.between]: [attendanceStart, attendanceEnd]
+      }
+    }
+  })
 }
