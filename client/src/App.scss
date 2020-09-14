@@ -21,7 +21,7 @@
     }
   }
 
-  .App-Content {
+  main.ant-layout-content {
     padding: 10px 10px 0;
 
     .site-layout-content {
@@ -29,82 +29,5 @@
       border-radius: 4px;
       padding: 15px;
     }
-  }
-
-  .Content-Filter {
-    margin-bottom: 20px;
-  }
-
-  .Content-Table {
-    .ant-table-thead .ant-table-cell {
-      text-align: center;
-    }
-
-    .Employee-Title {
-      font-size: 0.9rem;
-    }
-
-    .Employee-Subtitle {
-      color: #777;
-      font-size: 0.85rem;
-
-      margin-top: -4px;
-
-      .value {
-        color: #555;
-        //font-weight: bold;
-      }
-
-      .divider {
-        color: #BBB;
-        margin: 0 5px;
-      }
-    }
-  }
-
-  .Table-Title-Left {
-    padding: 4px;
-  }
-
-  .Table-Title-Right {
-    padding-right: 5px;
-  }
-
-  .Table-Title-Month {
-    font-size: 1.1rem;
-    font-weight: bold;
-  }
-
-  .Table-Title-Date {
-    color: #666;
-    margin-top: -4px;
-
-    //.date {
-    //  background-color: #EEE;
-    //  color: #333;
-    //  font-size: 0.85rem;
-    //
-    //  display: inline-block;
-    //  margin: 0 2px;
-    //  padding: 1px 6px;
-    //}
-
-
-  }
-
-  .Table-Title-Datasource {
-    color: #444;
-
-
-
-    .Datasource-Uploaded {
-      color: #666;
-    }
-  }
-
-  .Table-Title-Right {
-    text-align: right;
-    vertical-align: middle;
-    //height: 100%;
   }
 }

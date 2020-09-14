@@ -2,12 +2,12 @@
 import _ from 'lodash'
 import cookieParser from 'cookie-parser'
 import express from 'express'
+import history from 'connect-history-api-fallback'
 import http from 'http'
 import morgan from 'morgan'
 import path from 'path'
 import { Router as AsyncRouter } from '@awaitjs/express'
 
-import homeRoutes from './routes/home'
 import apiRoutes from './routes/api'
 
 import { initConfig, config as appConfig } from './config'
@@ -22,6 +22,7 @@ async function init() {
 
 export default init()
   .then(() => {
+    log.info(`Initializing Express (${process.env.NODE_ENV})`)
     const app = express()
 
     app.use(morgan('dev'))
@@ -29,10 +30,19 @@ export default init()
     app.use(express.urlencoded({ extended: false }))
     app.use(cookieParser())
 
+    const apiRouter = new AsyncRouter()
+    apiRouter.use(apiRoutes)
+
+    app.use('/api', apiRouter)
     app.use(express.static(path.join(__dirname, 'static')))
 
     if (process.env.NODE_ENV !== 'production') {
-      log.info('Setting up Webpack Middlewares');
+      log.info('Setting up Webpack Middlewares')
+
+      app.use(history({
+        disableDotRule: true,
+        htmlAcceptHeaders: ['text/html', 'application/xhtml+xml']
+      }))
 
       const Webpack = require('webpack')
       const WebpackDevMiddleware = require('webpack-dev-middleware')
@@ -50,14 +60,12 @@ export default init()
         }
       }))
       app.use(WebpackHotMiddleware(compiler))
+
     } else {
-      app.use('/', homeRoutes)
+      app.get('*', (req, res, next) => {
+        res.sendFile(path.join(__dirname, './static/client/index.html'))
+      })
     }
-
-    const apiRouter = new AsyncRouter()
-    apiRouter.use(apiRoutes)
-
-    app.use('/api', apiRouter)
 
     // error handler
     app.use((err, req, res, next) => {

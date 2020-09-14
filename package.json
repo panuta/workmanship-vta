@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "BABEL_DISABLE_CACHE=1 npx nodemon server/index.js --exec \"npx babel-node\"",
     "build": "babel server -d dist --copy-files",
-    "start": "node dist/index.js"
+    "start": "NODE_ENV=production node dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -51,6 +51,7 @@
     "@awaitjs/express": "^0.6.1",
     "bunyan": "^1.8.14",
     "bunyan-format": "^0.2.1",
+    "connect-history-api-fallback": "^1.6.0",
     "cookie-parser": "^1.4.4",
     "cross-env": "^7.0.2",
     "dayjs": "^1.8.35",

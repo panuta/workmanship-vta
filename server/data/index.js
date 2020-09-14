@@ -23,12 +23,12 @@ export const getMonthlyEmployeeAttendances = async (attendanceMonth) => {
 
   const result = Object.values(employeeMapping).map(employeeData => {
     const employeeDict = employeeData.employee.toJSON()
-    console.log(employeeDict)
+    // console.log(employeeDict)
     return Object.assign(employeeDict, {
       vacation: employeeData.vacation
     })
   })
 
-  console.log(result)
+  // console.log(result)
   return result
 }
