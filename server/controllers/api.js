@@ -1,6 +1,22 @@
+import { log } from '../log'
+
 import { processExcelFile } from '../data/sources/excel/process'
 import { InvalidRequestError, MissingAttributesError } from '../errors'
 import { getMonthlyEmployeeAttendances } from '../data'
+import { uploadExcelFile } from '../data/sources/excel/uploader'
+
+export const uploadFile = async (req, res, next) => {
+  throw new MissingAttributesError('No files were uploaded')
+
+  if (!req.files || Object.keys(req.files).length === 0) {
+    throw new MissingAttributesError('No files were uploaded')
+  }
+
+  const sourceFile = await uploadExcelFile(new Date(2020, 7), req.files.file)
+  await processExcelFile(sourceFile)
+
+  res.status(200).json({})
+}
 
 export const process = async (req, res, next) => {
   await processExcelFile()

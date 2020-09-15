@@ -1,13 +1,12 @@
 import _ from 'lodash'
-import path from 'path'
 
 import ExcelReader from './reader'
 import { Employee, EmployeeAttendance, Shift } from '../../models/definitions'
+import { stringToDate } from '../../utils'
 
-export const processExcelFile = async () => {
-  const reader = new ExcelReader(path.resolve(__dirname, '../../../resources/input-08-63-small.xlsx'))
-
-  const currentMonth = new Date(2020, 7)
+export const processExcelFile = async (sourceFile) => {
+  const reader = new ExcelReader(sourceFile.filePath)
+  const monthYear = stringToDate(sourceFile.monthYear)
 
   // Shift
   const shiftData = reader.readShifts()
@@ -29,7 +28,7 @@ export const processExcelFile = async () => {
     _.range(1, 32).forEach(date => {
       const value = {
         code : employeeShiftData.code,
-        attendanceDate: new Date(currentMonth.getFullYear(), currentMonth.getMonth(), date),
+        attendanceDate: new Date(monthYear.getFullYear(), monthYear.getMonth(), date),
         shift: employeeShiftData[date]
       }
 
@@ -38,5 +37,4 @@ export const processExcelFile = async () => {
   })
 
   await EmployeeAttendance.bulkCreate(values, { updateOnDuplicate: ['shift'] })
-
 }

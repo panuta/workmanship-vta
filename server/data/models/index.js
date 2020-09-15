@@ -1,13 +1,14 @@
 import _ from 'lodash'
 import dayjs from 'dayjs'
 import { Op } from 'sequelize'
-import { Employee, EmployeeAttendance, Shift } from './definitions'
+import { Employee, EmployeeAttendance, Shift, SourceFile } from './definitions'
 import { dateToString } from '../utils'
 
 export const initDatabase = async () => {
   await Shift.sync({ alter: false })
   await Employee.sync({ alter: false })
   await EmployeeAttendance.sync({ alter: false })
+  await SourceFile.sync({ alter: false })
 }
 
 export const findEmployees = async (activeInMonth) => {

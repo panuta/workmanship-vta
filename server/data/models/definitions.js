@@ -3,6 +3,13 @@ import { Sequelize, DataTypes } from 'sequelize'
 
 const sequelize = new Sequelize({ dialect: 'sqlite', storage: path.resolve(__dirname, '../../database.sqlite') })
 
+export const SourceFile = sequelize.define('SourceFile', {
+  originalFilename: { type: DataTypes.STRING },
+  monthYear: { type: DataTypes.DATEONLY },
+  filePath: { type: DataTypes.STRING },
+  uploadedDatetime: { type: DataTypes.DATE },
+})
+
 export const Shift = sequelize.define('Shift', {
   code: { type: DataTypes.STRING, allowNull: false },
   start: { type: DataTypes.STRING },

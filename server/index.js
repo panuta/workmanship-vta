@@ -6,6 +6,7 @@ import history from 'connect-history-api-fallback'
 import http from 'http'
 import morgan from 'morgan'
 import path from 'path'
+import fileUpload from 'express-fileupload'
 import { Router as AsyncRouter } from '@awaitjs/express'
 
 import apiRoutes from './routes/api'
@@ -29,6 +30,7 @@ export default init()
     app.use(express.json())
     app.use(express.urlencoded({ extended: false }))
     app.use(cookieParser())
+    app.use(fileUpload({}))
 
     const apiRouter = new AsyncRouter()
     apiRouter.use(apiRoutes)
