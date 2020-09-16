@@ -4,18 +4,19 @@ import { processExcelFile } from '../data/sources/excel/process'
 import { InvalidRequestError, MissingAttributesError } from '../errors'
 import { getMonthlyEmployeeAttendances } from '../data'
 import { uploadExcelFile } from '../data/sources/excel/uploader'
+import { SourceFile } from '../data/models/definitions'
 
-export const uploadFile = async (req, res, next) => {
-  throw new MissingAttributesError('No files were uploaded')
-
-  if (!req.files || Object.keys(req.files).length === 0) {
-    throw new MissingAttributesError('No files were uploaded')
+const _parseMonthYearQuery = (requestQuery) => {
+  const { month, year } = requestQuery
+  if(month === undefined || year === undefined) {
+    throw new MissingAttributesError('Require month and year query parameter')
   }
 
-  const sourceFile = await uploadExcelFile(new Date(2020, 7), req.files.file)
-  await processExcelFile(sourceFile)
-
-  res.status(200).json({})
+  try {
+    return new Date(year, month - 1, 1)
+  } catch (error) {
+    throw new InvalidRequestError('Month and/or year is invalid')
+  }
 }
 
 export const process = async (req, res, next) => {
@@ -23,23 +24,48 @@ export const process = async (req, res, next) => {
   res.status(200).json({})
 }
 
-export const employeeAttendancesTable = async (req, res, next) => {
-  const { month, year } = req.query
+export const uploadFile = async (req, res, next) => {
+  const monthYear = _parseMonthYearQuery(req.query)
 
-  if(month === undefined || year === undefined) {
-    throw new MissingAttributesError('Require month and year query parameter')
+  if (!req.files || Object.keys(req.files).length === 0) {
+    throw new MissingAttributesError('No files were uploaded')
   }
 
-  let activeInMonth
-  try {
-    activeInMonth = new Date(year, month - 1, 1)
-  } catch (error) {
-    throw new InvalidRequestError('Month and/or year is invalid')
-  }
+  const sourceFile = await uploadExcelFile(monthYear, req.files.file)
+  await processExcelFile(sourceFile)
 
-  const monthlyEmployeeAttendances = await getMonthlyEmployeeAttendances(activeInMonth)
-
-  res.status(200).json({
-    data: monthlyEmployeeAttendances
+  await SourceFile.update({ isSelected: false }, {
+    where: {
+      monthYear
+    }
   })
+
+  sourceFile.isSelected = true
+  await sourceFile.save()
+
+  res.status(200).json({})
+}
+
+export const employeeAttendancesTable = async (req, res, next) => {
+  const monthYear = _parseMonthYearQuery(req.query)
+
+  const sourceFile = await SourceFile.findOne({ where: { monthYear, isSelected: true } })
+
+  if(sourceFile !== null) {
+    const monthlyEmployeeAttendances = await getMonthlyEmployeeAttendances(monthYear)
+    res.status(200).json({
+      sourceFilename: sourceFile.originalFilename,
+      sourceUploadedDatetime: sourceFile.uploadedDatetime,
+      employees: monthlyEmployeeAttendances
+    })
+  } else {
+    res.status(200).json({
+      sourceFilename: null,
+      sourceUploadedDatetime: null,
+      employees: []
+    })
+  }
+
+
+
 }

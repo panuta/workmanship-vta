@@ -8,6 +8,7 @@ export const SourceFile = sequelize.define('SourceFile', {
   monthYear: { type: DataTypes.DATEONLY },
   filePath: { type: DataTypes.STRING },
   uploadedDatetime: { type: DataTypes.DATE },
+  isSelected: { type: DataTypes.BOOLEAN, defaultValue: false }
 })
 
 export const Shift = sequelize.define('Shift', {

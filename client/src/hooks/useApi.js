@@ -6,7 +6,7 @@ export const apiStates = {
   ERROR: 'ERROR',
 }
 
-export const useApi = url => {
+export const useApi = (url, effectDeps = []) => {
   const [data, setData] = React.useState({
     state: apiStates.LOADING,
     error: '',
@@ -16,6 +16,7 @@ export const useApi = url => {
   const setPartData = (partialData) => setData({ ...data, ...partialData })
 
   React.useEffect(() => {
+    console.log("fetch")
     setPartData({
       state: apiStates.LOADING,
     })
@@ -33,7 +34,7 @@ export const useApi = url => {
           error: 'fetch failed'
         })
       })
-  }, [])
+  }, effectDeps)
 
   return data
 }

@@ -1,4 +1,3 @@
-import dayjs from 'dayjs'
 import React, { useState } from 'react'
 import { Alert, Button, Drawer, Space, Upload } from 'antd'
 import { CloseOutlined, FileExcelOutlined } from '@ant-design/icons';
@@ -54,6 +53,8 @@ const UploadDrawer = ({ monthYear, visible, onSuccess, onFailure, onCancel }) =>
     }
   }
 
+  const uploadUrl = `/api/uploadFile?month=${monthYear.month() + 1}&year=${monthYear.year()}`
+
   return (
     <Drawer
       title="อัพโหลดไฟล์ Excel"
@@ -65,9 +66,9 @@ const UploadDrawer = ({ monthYear, visible, onSuccess, onFailure, onCancel }) =>
       className="upload-drawer"
     >
       <Space direction="vertical" size={15}>
-        <div className="target-month-year">สำหรับเดือน <span className="month-year">{dayjs(monthYear).format('MMMM YYYY')}</span></div>
+        <div className="target-month-year">สำหรับเดือน <span className="month-year">{monthYear.format('MMMM YYYY')}</span></div>
         <div className="replace-warning">ถ้าหากเดือนที่กำลังอัพโหลดมีข้อมูลอยู่ก่อนแล้ว ข้อมูลของเดือนนั้นๆ จะถูกแทนที่ด้วยข้อมูลจากไฟล์ใหม่</div>
-        <Upload name="file" action="/api/uploadFile" onChange={handleChange} fileList={fileList}>
+        <Upload name="file" action={uploadUrl} onChange={handleChange} fileList={fileList}>
           <Button size="large" type="primary" icon={<FileExcelOutlined />}>เลือกไฟล์อัพโหลด</Button>
         </Upload>
         {resultElement}

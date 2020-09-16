@@ -1,23 +1,27 @@
-import dayjs from 'dayjs'
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import moment from 'moment'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { ConfigProvider } from 'antd'
 
-import 'antd/dist/antd.css';
-import './index.css';
+import App from './App'
+import * as serviceWorker from './serviceWorker'
+import thTH from 'antd/es/locale/th_TH'
 
-require('dayjs/locale/th')
-dayjs.locale('th')
+import 'antd/dist/antd.css'
+import './index.css'
+
+moment.locale('th')
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ConfigProvider locale={thTH}>
+      <App />
+    </ConfigProvider>
   </React.StrictMode>,
   document.getElementById('root')
-);
+)
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.unregister()
