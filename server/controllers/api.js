@@ -1,5 +1,3 @@
-import { log } from '../log'
-
 import { processExcelFile } from '../data/sources/excel/process'
 import { InvalidRequestError, MissingAttributesError } from '../errors'
 import { getMonthlyEmployeeAttendances } from '../data'
@@ -19,9 +17,26 @@ const _parseMonthYearQuery = (requestQuery) => {
   }
 }
 
-export const process = async (req, res, next) => {
-  await processExcelFile()
-  res.status(200).json({})
+export const employeeAttendances = async (req, res, next) => {
+  const monthYear = _parseMonthYearQuery(req.query)
+
+  const sourceFile = await SourceFile.findOne({ where: { monthYear, isSelected: true } })
+
+  if(sourceFile !== null) {
+    const monthlyEmployeeAttendances = await getMonthlyEmployeeAttendances(monthYear)
+    res.status(200).json({
+      sourceId: sourceFile.sourceId,
+      sourceFilename: sourceFile.originalFilename,
+      sourceUploadedDatetime: sourceFile.uploadedDatetime,
+      employees: monthlyEmployeeAttendances
+    })
+  } else {
+    res.status(200).json({
+      sourceFilename: null,
+      sourceUploadedDatetime: null,
+      employees: []
+    })
+  }
 }
 
 export const uploadFile = async (req, res, next) => {
@@ -44,28 +59,4 @@ export const uploadFile = async (req, res, next) => {
   await sourceFile.save()
 
   res.status(200).json({})
-}
-
-export const employeeAttendancesTable = async (req, res, next) => {
-  const monthYear = _parseMonthYearQuery(req.query)
-
-  const sourceFile = await SourceFile.findOne({ where: { monthYear, isSelected: true } })
-
-  if(sourceFile !== null) {
-    const monthlyEmployeeAttendances = await getMonthlyEmployeeAttendances(monthYear)
-    res.status(200).json({
-      sourceFilename: sourceFile.originalFilename,
-      sourceUploadedDatetime: sourceFile.uploadedDatetime,
-      employees: monthlyEmployeeAttendances
-    })
-  } else {
-    res.status(200).json({
-      sourceFilename: null,
-      sourceUploadedDatetime: null,
-      employees: []
-    })
-  }
-
-
-
 }

@@ -4,6 +4,7 @@ import { Sequelize, DataTypes } from 'sequelize'
 const sequelize = new Sequelize({ dialect: 'sqlite', storage: path.resolve(__dirname, '../../database.sqlite') })
 
 export const SourceFile = sequelize.define('SourceFile', {
+  sourceId: { type: DataTypes.UUID, defaultValue: Sequelize.UUIDV4 },
   originalFilename: { type: DataTypes.STRING },
   monthYear: { type: DataTypes.DATEONLY },
   filePath: { type: DataTypes.STRING },

@@ -2,8 +2,7 @@ import moment from 'moment'
 import React, { useState } from 'react'
 import { Alert, Button, DatePicker, Table, Row, Col, Space, Layout } from 'antd'
 import { CloudUploadOutlined } from '@ant-design/icons'
-
-import { apiStates, useApi } from '../hooks/useApi'
+import { useAsyncRun, useAsyncTask } from 'react-hooks-async'
 
 import './EmployeeAttendancesPage.scss'
 
@@ -38,20 +37,30 @@ const TABLE_COLUMNS = [
 
 const { Content } = Layout
 
+const fetchEmployeeAttendances = async ({ signal }, month, year) => {
+  const response = await fetch(`/api/employeeAttendances?month=${month}&year=${year}`, { signal })
+  return response.json()
+}
+
 const EmployeeAttendancesPage = () => {
   const [monthYear, setMonthYear] = useState(moment().startOf('month'))
   const handleChange = (date, dateString) => {
     setMonthYear(date.startOf('month'))
   }
 
-  const { state, error, data } = useApi(`/api/employeeAttendancesTable?month=${monthYear.month() + 1}&year=${monthYear.year()}`, [monthYear])
+  const task = useAsyncTask(fetchEmployeeAttendances)
+  useAsyncRun(task, monthYear.month() + 1, monthYear.year())
 
+  // Upload Drawer
   const [uploadDrawerVisible, setUploadDrawerVisible] = useState(false)
+
   const handleUploadButtonClick = () => {
     setUploadDrawerVisible(true)
   }
+
   const handleUploadSuccess = (uploadedFile) => {
     setUploadDrawerVisible(false)
+    task.start(monthYear.month() + 1, monthYear.year())  // Re-fetch data
   }
   const handleUploadFailure = () => {
     setUploadDrawerVisible(false)
@@ -73,10 +82,10 @@ const EmployeeAttendancesPage = () => {
         </Col>
         <Col span={16} className="table-title-right">
           <Space size={15} className="title-datasource">
-            {data.sourceFilename &&
+            {task.result && task.result.sourceFilename &&
             <Space direction="vertical" align="right" size={2}>
-              <div className="datasource-file">ไฟล์ข้อมูล <a href="#" className="filename">{data.sourceFilename}</a></div>
-              <div className="datasource-uploaded">อัพโหลดเมื่อวันที่ {moment(data.sourceUploadedDatetime).format('D MMM YYYY เวลา hh:mm')}</div>
+              <div className="datasource-file">ไฟล์ข้อมูล <a href="#" className="filename">{task.result.sourceFilename}</a></div>
+              <div className="datasource-uploaded">อัพโหลดเมื่อวันที่ {moment(task.result.sourceUploadedDatetime).format('D MMM YYYY เวลา hh:mm')}</div>
             </Space>
             }
             <Button icon={<CloudUploadOutlined />} onClick={handleUploadButtonClick}>อัพโหลดไฟล์</Button>
@@ -86,49 +95,54 @@ const EmployeeAttendancesPage = () => {
     )
   }
 
-  switch (state) {
-    case apiStates.ERROR:
-      return <Alert message='Error occurred while loading data' description={error} type='error' showIcon />
-    case apiStates.SUCCESS:
-      return (
-        <Content key="1" className="employee-attendances-page">
-          <div className="site-layout-content">
-            <Table
-              bordered
-              columns={TABLE_COLUMNS}
-              dataSource={data.employees}
-              size="small"
-              pagination={false}
-              scroll={{x: "100%"}}
-              className="time-attendance-table"
-              title={renderTableTitle} />
-            <UploadDrawer
-              monthYear={monthYear}
-              visible={uploadDrawerVisible}
-              onSuccess={handleUploadSuccess}
-              onFailure={handleUploadFailure}
-              onCancel={handleUploadCancel}
-            />
-          </div>
-        </Content>
-      )
-    default:
-      return (
-        <Content key="1" className="employee-attendances-page">
-          <div className="site-layout-content">
-            <Table
-              bordered
-              loading
-              columns={TABLE_COLUMNS}
-              size="small"
-              pagination={false}
-              scroll={{x: "100%"}}
-              className="time-attendance-table"
-              title={renderTableTitle} />
-          </div>
-        </Content>
-      )
+  const renderErrorState = (error) => {
+    return <Alert message='Error occurred while loading data' description={error} type='error' showIcon />
   }
+
+  const renderLoadingState = () => {
+    return <Table
+      bordered
+      loading
+      columns={TABLE_COLUMNS}
+      size="small"
+      pagination={false}
+      scroll={{x: "100%"}}
+      className="time-attendance-table"
+      title={renderTableTitle} />
+  }
+
+  const renderSuccessState = () => {
+    return (
+      <React.Fragment>
+        <Table
+          bordered
+          columns={TABLE_COLUMNS}
+          dataSource={task.result.employees}
+          size="small"
+          pagination={false}
+          scroll={{x: "100%"}}
+          className="time-attendance-table"
+          title={renderTableTitle} />
+        <UploadDrawer
+          monthYear={monthYear}
+          visible={uploadDrawerVisible}
+          onSuccess={handleUploadSuccess}
+          onFailure={handleUploadFailure}
+          onCancel={handleUploadCancel}
+        />
+      </React.Fragment>
+    )
+  }
+
+  return (
+    <Content className="employee-attendances-page">
+      <div className="site-layout-content">
+        {task.error && renderErrorState(task.error)}
+        {task.pending && renderLoadingState()}
+        {task.result && renderSuccessState()}
+      </div>
+    </Content>
+  )
 }
 
 export default EmployeeAttendancesPage
