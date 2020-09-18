@@ -6,7 +6,7 @@ import { useAsyncRun, useAsyncTask } from 'react-hooks-async'
 
 import './EmployeeAttendancesPage.scss'
 
-import UploadDrawer from '../components/UploadDrawer'
+import UploadModal from '../components/UploadModal'
 
 const NumberRenderer = (text, record, index) => (Math.round(text * 100) / 100).toFixed(2)
 
@@ -125,7 +125,7 @@ const EmployeeAttendancesPage = () => {
           scroll={{x: "100%"}}
           className="time-attendance-table"
           title={renderTableTitle} />
-        <UploadDrawer
+        <UploadModal
           monthYear={monthYear}
           visible={uploadDrawerVisible}
           onSuccess={handleUploadSuccess}
