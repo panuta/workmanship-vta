@@ -20,6 +20,14 @@ export const readColumnsData = (worksheet, columns) => {
   return _.zip(...data).map(datum => _.zipObject(columns.map(column => column.key), datum))
 }
 
+export const readCellValue = (worksheet, cellCode, defaultValue = '') => {
+  const cell = worksheet[cellCode]
+  if(cell === undefined || cell.v === undefined) {
+    return defaultValue
+  }
+  return cell.v
+}
+
 export const columnRange = (start, end) => {
   return _.range(XLSX.utils.decode_col(start), XLSX.utils.decode_col(end) + 1)
     .map(colIndex => XLSX.utils.encode_col(colIndex))

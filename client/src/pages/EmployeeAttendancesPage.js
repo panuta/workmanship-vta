@@ -8,6 +8,8 @@ import './EmployeeAttendancesPage.scss'
 
 import UploadDrawer from '../components/UploadDrawer'
 
+const NumberRenderer = (text, record, index) => (Math.round(text * 100) / 100).toFixed(2)
+
 const TABLE_COLUMN_WIDTH = 50
 const TABLE_COLUMNS = [
   {
@@ -25,8 +27,8 @@ const TABLE_COLUMNS = [
   { title: 'ลาป่วย', key: '', width: TABLE_COLUMN_WIDTH },
   { title: 'ลากิจ', key: '', width: TABLE_COLUMN_WIDTH },
   { title: (<span>ลากิจ<br/>(หักเงิน)</span>), key: '', width: TABLE_COLUMN_WIDTH },
-  { title: 'สะสม', key: '', width: TABLE_COLUMN_WIDTH },
-  { title: 'ใช้สะสม', key: '', width: TABLE_COLUMN_WIDTH },
+  { title: 'สะสม', dataIndex: 'compensation', key: '', align: 'right', width: TABLE_COLUMN_WIDTH, render: NumberRenderer },
+  { title: 'ใช้สะสม', dataIndex: 'usedCompensation', key: '', align: 'right', width: TABLE_COLUMN_WIDTH, render: NumberRenderer },
   { title: (<span>หนี้<br/>(สั่งหยุด)</span>), key: '', width: TABLE_COLUMN_WIDTH },
   { title: (<span>ใช้คืน<br/>(สั่งหยุด)</span>), key: '', width: TABLE_COLUMN_WIDTH },
   { title: (<span>สาย<br/>(นาที)</span>), key: '', width: TABLE_COLUMN_WIDTH },

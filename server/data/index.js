@@ -1,13 +1,18 @@
+import _ from 'lodash'
 import { findEmployeeAttendances, findEmployees } from './models'
 
 export const getMonthlyEmployeeAttendances = async (attendanceMonth) => {
   const employees = await findEmployees(attendanceMonth)
   const employeeAttendances = await findEmployeeAttendances(attendanceMonth)
 
+  // Convert list of employees to employee mapping
   const employeeMapping = employees.reduce((accumulator, employee) => {
     accumulator[employee.code] = {
       employee,
-      vacation: 0
+      vacation: 0,
+      compensation: 0,
+      usedCompensation: 0,
+      // => ADD MORE HERE <=
     }
     return accumulator
   }, {})
@@ -18,17 +23,19 @@ export const getMonthlyEmployeeAttendances = async (attendanceMonth) => {
       employeeMapping[employeeAttendance.code].vacation += 1
     }
 
+    if(_.isNumber(employeeAttendance.compensation)) {
+      employeeMapping[employeeAttendance.code].compensation += employeeAttendance.compensation
+    }
 
+    if(_.isNumber(employeeAttendance.usedCompensation)) {
+      employeeMapping[employeeAttendance.code].usedCompensation += employeeAttendance.usedCompensation
+    }
+
+    // => ADD MORE HERE <=
   })
 
-  const result = Object.values(employeeMapping).map(employeeData => {
+  return Object.values(employeeMapping).map(employeeData => {
     const employeeDict = employeeData.employee.toJSON()
-    // console.log(employeeDict)
-    return Object.assign(employeeDict, {
-      vacation: employeeData.vacation
-    })
+    return Object.assign(employeeDict, _.omit(employeeData, ['employee']))
   })
-
-  // console.log(result)
-  return result
 }

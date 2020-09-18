@@ -1,21 +1,17 @@
 import dayjs from 'dayjs'
 import XLSX from 'xlsx'
-import { columnRange, readColumnsData } from './utils'
+import { columnRange, readCellValue, readColumnsData } from './utils'
 import { parseDuration } from '../../utils'
 
 class ExcelReader {
   constructor(filePath) {
-    // this.workbook = XLSX.readFile(filePath, { cellDates: true })  // TODO : Remove cellDates and switch to column data type as params
     this.workbook = XLSX.readFile(filePath)
   }
 
-  static _columnDefinition(columns, startRow, endRow) {
-    return [
-      columns.map(source => `${source.col}${startRow}:${source.col}${endRow}`),
-      columns.map(source => source.key)
-    ]
-  }
-
+  /**
+   * Returns all possible shifts in a company
+   * @returns [ { code, start, end, break } ]
+   */
   readShifts() {
     const worksheet = this.workbook.Sheets[this.workbook.SheetNames[1]]
     const columns = [
@@ -27,9 +23,13 @@ class ExcelReader {
 
     const shiftData = readColumnsData(worksheet, columns)
     return shiftData
-      .filter(employee => employee.code !== null)
+      .filter(shift => shift.code !== null)
   }
 
+  /**
+   * Returns a list of employees
+   * @returns [ { code, salutation, fullName, nickName, company ... } ]
+   */
   readEmployees() {
     const worksheet = this.workbook.Sheets[this.workbook.SheetNames[0]]
     const columns = [
@@ -51,8 +51,13 @@ class ExcelReader {
       .map(employee => Object.assign(employee, { code: `${employee.code}` }))
   }
 
-  readEmployeeShifts() {
-    const worksheet = this.workbook.Sheets[this.workbook.SheetNames[1]]
+  /**
+   * Returns employees' attendant shift or vacation separated by dates
+   * Data source mainly from "2.schedule-ตารางกะ" worksheet
+   * @returns [ { employee: { code, salutation, fullName ... }, 1, 2, 3, 4 } ]
+   */
+  readEmployeesShifts() {
+    const worksheet = this.workbook.Sheets[this.workbook.SheetNames[1]]  // 2.schedule-ตารางกะ
     const columns = [
       { key: 'code', range: 'I5:I120' },
     ].concat(
@@ -65,6 +70,91 @@ class ExcelReader {
     return employeeShiftData
       .filter(employee => employee.code !== null)
   }
+
+  readEmployeesInputDaily() {
+    const WORKSHEET_INDEX = 4  // 5.INPUT-Daily
+    const MAX_EMPLOYEE_ROWS = 200
+    const START_DATE_CELL = XLSX.utils.decode_cell('J3')
+    const LAST_COLUMN_NAME_OF_A_DAY = 'เบี้ยขยัน'
+
+    const worksheet = this.workbook.Sheets[this.workbook.SheetNames[WORKSHEET_INDEX]]
+
+    let checkingColumn = START_DATE_CELL.c
+
+    const extractingColumns = [
+      { key: 'code', range: `B${START_DATE_CELL.r + 3 + 1}:B${START_DATE_CELL.r + 3 + MAX_EMPLOYEE_ROWS + 1}` },
+    ]
+
+    let blankDateCells = 0
+    do {
+      const dateCellValue = readCellValue(worksheet, XLSX.utils.encode_cell({ c: checkingColumn, r: START_DATE_CELL.r }))
+
+      // If cell has date value, start reading values within the date
+      if(dateCellValue) {
+        let inStatsColumns = false
+        do {
+          const topHeaderValue = readCellValue(worksheet, XLSX.utils.encode_cell({ c: checkingColumn, r: START_DATE_CELL.r + 1 }))
+          const bottomHeaderValue = readCellValue(worksheet, XLSX.utils.encode_cell({ c: checkingColumn, r: START_DATE_CELL.r + 2 }))
+
+          // Start collecting columns when topHeaderValue is 'สถิติการใช้สิทธิ์ประจำวัน'
+          if(!inStatsColumns) {
+            inStatsColumns = topHeaderValue === 'สถิติการใช้สิทธิ์ประจำวัน'
+          }
+
+          if(inStatsColumns && bottomHeaderValue !== '') {
+            const range = `${XLSX.utils.encode_cell({ c: checkingColumn, r: START_DATE_CELL.r + 3 })}:${XLSX.utils.encode_cell({ c: checkingColumn, r: START_DATE_CELL.r + 3 + MAX_EMPLOYEE_ROWS })}`
+            if(bottomHeaderValue === 'สะสม') {
+              extractingColumns.push({ key: `${dateCellValue}.compensation`, range })
+            } else if(bottomHeaderValue === 'ใช้สะสม') {
+              extractingColumns.push({ key: `${dateCellValue}.usedCompensation`, range })
+            }
+
+            // Stop collecting columns within a date when LAST_COLUMN_NAME_OF_A_DAY found
+            if(bottomHeaderValue === LAST_COLUMN_NAME_OF_A_DAY) {
+              break
+            }
+          }
+
+          checkingColumn += 1
+
+          // eslint-disable-next-line no-constant-condition
+        } while(true)
+
+        blankDateCells = 0
+      } else {
+        blankDateCells += 1
+      }
+
+      // Stop collecting columns when no date found within 5 consecutive cells
+      if(blankDateCells > 5) {
+        break
+      }
+
+      checkingColumn += 1
+
+      // eslint-disable-next-line no-constant-condition
+    } while (true)
+
+    const employeeInputDailyData = readColumnsData(worksheet, extractingColumns)
+    return employeeInputDailyData
+      .filter(employee => employee.code !== null)
+  }
 }
 
 export default ExcelReader
+
+/*
+ใบเตือน	พักร้อน	ลาป่วย	ลากิจ	ลากิจหักเงิน	สะสม	ใช้สะสม	หนี้ (สั่งหยุด)	ใช้คืน(สั่งหยุด)	สาย(นาที)	ออกก่อน(นาที)	ขาด	เบี้ยขยัน
+- vacation
+- sickLeave
+- casualLeave
+- unpaidLeave
+- compensation
+- usedCompensation
+- forceBreak
+- returnedForceBreak
+- minuteLate
+- minuteEarlyLeave
+- noShow
+- diligenceAllowance
+*/

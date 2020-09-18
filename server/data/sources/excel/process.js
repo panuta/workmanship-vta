@@ -21,20 +21,45 @@ export const processExcelFile = async (sourceFile) => {
   await Employee.bulkCreate(employeeData)
 
   // Employee Time Attendance
-  const employeeShiftDataList = reader.readEmployeeShifts()
+  const employeeAttendanceMapping = {}  // [code, date] => { ... }
 
-  const values = []
-  employeeShiftDataList.forEach(employeeShiftData => {
+  const employeesShiftsDataList = reader.readEmployeesShifts()
+  employeesShiftsDataList.forEach(employeeShiftsData => {
+    const employeeCode = employeeShiftsData.code
     _.range(1, 32).forEach(date => {
-      const value = {
-        code : employeeShiftData.code,
-        attendanceDate: new Date(monthYear.getFullYear(), monthYear.getMonth(), date),
-        shift: employeeShiftData[date]
+      // const attendanceDate = new Date(monthYear.getFullYear(), monthYear.getMonth(), date)
+      if(_.has(employeeShiftsData, date)) {
+        _.set(employeeAttendanceMapping, [`${employeeCode}:${date}`, 'shift'], employeeShiftsData[date])
       }
-
-      values.push(value)
     })
   })
 
-  await EmployeeAttendance.bulkCreate(values, { updateOnDuplicate: ['shift'] })
+  const employeesInputDailyDataList = reader.readEmployeesInputDaily()
+  employeesInputDailyDataList.forEach(employeeInputDailyData => {
+    const employeeCode = employeeInputDailyData.code
+    _.range(1, 32).forEach(date => {
+      // const attendanceDate = new Date(monthYear.getFullYear(), monthYear.getMonth(), date)
+
+      const setValue = name => {
+        const key = `${date}.${name}`
+        if(_.has(employeeInputDailyData, key) && employeeInputDailyData[key] !== null)
+          _.set(employeeAttendanceMapping, [`${employeeCode}:${date}`, name], employeeInputDailyData[key])
+      }
+
+      setValue('compensation')
+      setValue('usedCompensation')
+      // => ADD MORE HERE <=
+    })
+  })
+
+  const persistingValues = Object.entries(employeeAttendanceMapping).map(([key, attendanceValues]) => {
+    const [employeeCode, attendanceDay] = key.split(':', 2)
+    return {
+      code: employeeCode,
+      attendanceDate: new Date(monthYear.getFullYear(), monthYear.getMonth(), parseInt(attendanceDay, 10)),
+      ...attendanceValues
+    }
+  })
+
+  await EmployeeAttendance.bulkCreate(persistingValues, { updateOnDuplicate: ['shift'] })
 }
