@@ -1,4 +1,5 @@
 import moment from 'moment'
+import 'moment/locale/th'  // Need to explicitly import due to create-react-app behavior
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { ConfigProvider } from 'antd'
