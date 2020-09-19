@@ -36,8 +36,14 @@ export const EmployeeAttendance = sequelize.define('EmployeeAttendance', {
   code: { type: DataTypes.STRING, allowNull: false, unique: 'compositeIndex' },
   attendanceDate: { type: DataTypes.DATEONLY, allowNull: false, unique: 'compositeIndex' },
   shift: { type: DataTypes.STRING },
-  compensation: { type: DataTypes.INTEGER },
-  usedCompensation: { type: DataTypes.INTEGER },
+  compensation: { type: DataTypes.DECIMAL },
+  usedCompensation: { type: DataTypes.DECIMAL },
+  forceBreak: { type: DataTypes.DECIMAL },
+  returnedForceBreak: { type: DataTypes.DECIMAL },
+  minuteLate: { type: DataTypes.DECIMAL },
+  minuteEarlyLeave: { type: DataTypes.DECIMAL },
+  noShow: { type: DataTypes.DECIMAL },
+  diligenceAllowance: { type: DataTypes.DECIMAL },
 }, {
   indexes: [{ unique: true, fields: ['code', 'attendanceDate'] }]
 })

@@ -10,28 +10,51 @@ export const getMonthlyEmployeeAttendances = async (attendanceMonth) => {
     accumulator[employee.code] = {
       employee,
       vacation: 0,
+      sickLeave: 0,
+      casualLeave: 0,
       compensation: 0,
       usedCompensation: 0,
+      forceBreak: 0,
+      returnedForceBreak: 0,
+      minuteLate: 0,
+      minuteEarlyLeave: 0,
+      noShow: 0,
+      diligenceAllowance: 0,
       // => ADD MORE HERE <=
     }
     return accumulator
   }, {})
 
   employeeAttendances.forEach(employeeAttendance => {
-    // Vacation
-    if(employeeAttendance.shift === 'พักร้อน') {
-      employeeMapping[employeeAttendance.code].vacation += 1
-    }
+    // Only for employees that is valid within this month
+    if(_.has(employeeMapping, [employeeAttendance.code])) {
+      const increaseWhenShiftIs = (shiftName, valueName) => {
+        if(employeeAttendance.shift === shiftName) {
+          employeeMapping[employeeAttendance.code][valueName] += 1
+        }
+      }
 
-    if(_.isNumber(employeeAttendance.compensation)) {
-      employeeMapping[employeeAttendance.code].compensation += employeeAttendance.compensation
-    }
+      const increaseByValue = (valueName) => {
+        if(_.isNumber(employeeAttendance[valueName])) {
+          employeeMapping[employeeAttendance.code][valueName] += employeeAttendance[valueName]
+        }
+      }
 
-    if(_.isNumber(employeeAttendance.usedCompensation)) {
-      employeeMapping[employeeAttendance.code].usedCompensation += employeeAttendance.usedCompensation
-    }
+      increaseWhenShiftIs('พักร้อน', 'vacation')
+      increaseWhenShiftIs('ลาป่วย', 'sickLeave')
+      increaseWhenShiftIs('ลากิจ', 'casualLeave')
 
-    // => ADD MORE HERE <=
+      increaseByValue('compensation')
+      increaseByValue('usedCompensation')
+      increaseByValue('forceBreak')
+      increaseByValue('returnedForceBreak')
+      increaseByValue('minuteLate')
+      increaseByValue('minuteEarlyLeave')
+      increaseByValue('noShow')
+      increaseByValue('diligenceAllowance')
+
+      // => ADD MORE HERE <=
+    }
   })
 
   return Object.values(employeeMapping).map(employeeData => {

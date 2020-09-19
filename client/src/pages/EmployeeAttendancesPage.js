@@ -8,7 +8,10 @@ import './EmployeeAttendancesPage.scss'
 
 import UploadModal from '../components/UploadModal'
 
-const NumberRenderer = (text, record, index) => (Math.round(text * 100) / 100).toFixed(2)
+const DecimalRenderer = (text, record, index) => {
+  const className = text === 0 ? 'value-zero' : 'value-normal'
+  return <span className={className}>{(Math.round(text * 100) / 100).toFixed(2)}</span>
+}
 
 const TABLE_COLUMN_WIDTH = 50
 const TABLE_COLUMNS = [
@@ -24,17 +27,17 @@ const TABLE_COLUMNS = [
   { title: 'สถานะพนักงาน', dataIndex: 'status', key: 'status', align: 'center', width: 140 },
   { title: 'ใบเตือน', align: 'center', width: TABLE_COLUMN_WIDTH },
   { title: 'พักร้อน', dataIndex: 'vacation', align: 'center', width: TABLE_COLUMN_WIDTH },
-  { title: 'ลาป่วย', key: '', width: TABLE_COLUMN_WIDTH },
-  { title: 'ลากิจ', key: '', width: TABLE_COLUMN_WIDTH },
-  { title: (<span>ลากิจ<br/>(หักเงิน)</span>), key: '', width: TABLE_COLUMN_WIDTH },
-  { title: 'สะสม', dataIndex: 'compensation', key: '', align: 'right', width: TABLE_COLUMN_WIDTH, render: NumberRenderer },
-  { title: 'ใช้สะสม', dataIndex: 'usedCompensation', key: '', align: 'right', width: TABLE_COLUMN_WIDTH, render: NumberRenderer },
-  { title: (<span>หนี้<br/>(สั่งหยุด)</span>), key: '', width: TABLE_COLUMN_WIDTH },
-  { title: (<span>ใช้คืน<br/>(สั่งหยุด)</span>), key: '', width: TABLE_COLUMN_WIDTH },
-  { title: (<span>สาย<br/>(นาที)</span>), key: '', width: TABLE_COLUMN_WIDTH },
-  { title: (<span>ออกก่อน<br/>(นาที)</span>), key: '', width: TABLE_COLUMN_WIDTH },
-  { title: 'ขาด', key: '', width: TABLE_COLUMN_WIDTH },
-  { title: 'เบี้ยขยัน', key: '', width: TABLE_COLUMN_WIDTH },
+  { title: 'ลาป่วย', dataIndex: 'sickLeave', align: 'center', width: TABLE_COLUMN_WIDTH },
+  { title: 'ลากิจ', dataIndex: 'casualLeave', align: 'center', width: TABLE_COLUMN_WIDTH },
+  { title: (<span>ลากิจ<br/>(หักเงิน)</span>), width: TABLE_COLUMN_WIDTH },
+  { title: 'สะสม', dataIndex: 'compensation', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
+  { title: 'ใช้สะสม', dataIndex: 'usedCompensation', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
+  { title: (<span>หนี้<br/>(สั่งหยุด)</span>), dataIndex: 'forceBreak', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
+  { title: (<span>ใช้คืน<br/>(สั่งหยุด)</span>), dataIndex: 'returnedForceBreak', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
+  { title: (<span>สาย<br/>(นาที)</span>), dataIndex: 'minuteLate', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
+  { title: (<span>ออกก่อน<br/>(นาที)</span>), dataIndex: 'minuteEarlyLeave', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
+  { title: 'ขาด', dataIndex: 'noShow', align: 'center', width: TABLE_COLUMN_WIDTH },
+  { title: 'เบี้ยขยัน', dataIndex: 'diligenceAllowance', align: 'center', width: TABLE_COLUMN_WIDTH },
 ]
 
 const { Content } = Layout

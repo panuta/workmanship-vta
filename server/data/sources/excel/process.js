@@ -48,6 +48,12 @@ export const processExcelFile = async (sourceFile) => {
 
       setValue('compensation')
       setValue('usedCompensation')
+      setValue('forceBreak')
+      setValue('returnedForceBreak')
+      setValue('minuteLate')
+      setValue('minuteEarlyLeave')
+      setValue('noShow')
+      setValue('diligenceAllowance')
       // => ADD MORE HERE <=
     })
   })

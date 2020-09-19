@@ -107,7 +107,20 @@ class ExcelReader {
               extractingColumns.push({ key: `${dateCellValue}.compensation`, range })
             } else if(bottomHeaderValue === 'ใช้สะสม') {
               extractingColumns.push({ key: `${dateCellValue}.usedCompensation`, range })
+            } else if(bottomHeaderValue === 'หนี้สั่งหยุด') {
+              extractingColumns.push({ key: `${dateCellValue}.forceBreak`, range })
+            } else if(bottomHeaderValue === 'ใช้คืน(สั่งหยุด)') {
+              extractingColumns.push({ key: `${dateCellValue}.returnedForceBreak`, range })
+            } else if(bottomHeaderValue === 'สาย(นาที)') {
+              extractingColumns.push({ key: `${dateCellValue}.minuteLate`, range })
+            } else if(bottomHeaderValue === 'ออกก่อน(นาที)') {
+              extractingColumns.push({ key: `${dateCellValue}.minuteEarlyLeave`, range })
+            } else if(bottomHeaderValue === 'ขาด') {
+              extractingColumns.push({ key: `${dateCellValue}.noShow`, range })
+            } else if(bottomHeaderValue === 'เบี้ยขยัน') {
+              extractingColumns.push({ key: `${dateCellValue}.diligenceAllowance`, range })
             }
+            // => ADD MORE HERE <=
 
             // Stop collecting columns within a date when LAST_COLUMN_NAME_OF_A_DAY found
             if(bottomHeaderValue === LAST_COLUMN_NAME_OF_A_DAY) {

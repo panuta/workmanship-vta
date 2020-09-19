@@ -49,7 +49,7 @@
   }
 
   .ant-table-thead .ant-table-cell {
-    text-align: center;
+    text-align: center !important;
   }
 
   .employee-title {
@@ -68,5 +68,13 @@
       color: #BBB;
       margin: 0 5px;
     }
+  }
+
+  .value-zero {
+    color: #777;
+  }
+
+  .value-normal {
+    font-weight: bold;
   }
 }

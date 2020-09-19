@@ -58,7 +58,7 @@ const UploadModal = ({ monthYear, visible, onSuccess, onFailure, onCancel }) => 
       visible={visible}
       onCancel={handleClose}
       footer={[
-        <Button key="back">ปิดหน้าต่าง</Button>
+        <Button onClick={handleClose}>ปิดหน้าต่าง</Button>
       ]}
     >
       <Space direction="vertical" size={12}>
