@@ -1,0 +1,16 @@
+.settings-page {
+  .ant-divider {
+    .ant-divider-inner-text {
+      color: #003a8c;
+    }
+  }
+
+  .ant-divider-horizontal.ant-divider-with-text-left::before {
+    width: 20px;
+  }
+
+  .danger-title {
+    color: #555;
+    font-size: 1rem;
+  }
+}

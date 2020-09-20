@@ -2,6 +2,7 @@ import moment from 'moment'
 import 'moment/locale/th'  // Need to explicitly import due to create-react-app behavior
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter } from 'react-router-dom'
 import { ConfigProvider } from 'antd'
 
 import App from './App'
@@ -16,7 +17,9 @@ moment.locale('th')
 ReactDOM.render(
   <React.StrictMode>
     <ConfigProvider locale={thTH}>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </ConfigProvider>
   </React.StrictMode>,
   document.getElementById('root')

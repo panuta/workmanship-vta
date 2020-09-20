@@ -10,6 +10,7 @@ import fileUpload from 'express-fileupload'
 import { Router as AsyncRouter } from '@awaitjs/express'
 
 import apiRoutes from './routes/api'
+import settingsApiRoutes from './routes/settingsApi'
 
 import { initConfig, config as appConfig } from './config'
 import { initLogger, log } from './log'
@@ -34,6 +35,7 @@ export default init()
 
     const apiRouter = new AsyncRouter()
     apiRouter.use(apiRoutes)
+    apiRouter.use(settingsApiRoutes)
 
     app.use('/api', apiRouter)
     app.use(express.static(path.join(__dirname, 'static')))
