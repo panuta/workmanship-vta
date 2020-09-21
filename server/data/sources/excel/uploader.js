@@ -12,6 +12,9 @@ export const generateUploadFilename = (monthYear, uploadedDatetime) => {
 export const uploadExcelFile = async (monthYear, file) => {
   // Validate file uploaded
 
+  // Create upload folder
+  fs.mkdirSync(UPLOAD_PATH, { recursive: true })
+
   // Generate Filename
   const uploadedDatetime = new Date()
   const filename = generateUploadFilename(monthYear, uploadedDatetime)
