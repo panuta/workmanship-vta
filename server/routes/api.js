@@ -1,9 +1,10 @@
 import { Router } from '@awaitjs/express'
-import { employeeAttendances, uploadFile } from '../controllers/api'
+import { uploadFileController } from '../controllers/uploadFile'
+import { employeesAttendancesPageController } from '../controllers/employeesAttendances'
 
 const router = Router()
 
-router.getAsync('/employeeAttendances', employeeAttendances)
-router.postAsync('/uploadFile', uploadFile)
+router.getAsync('/employeesAttendances', employeesAttendancesPageController)
+router.postAsync('/uploadFile', uploadFileController)
 
 export default router

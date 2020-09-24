@@ -74,7 +74,7 @@ export default init()
     // error handler
     app.use((err, req, res, next) => {
       log.error(err.stack)
-      const jsonResponse = { title: err.message, code: err.errorCode || 'INTERNAL_ERROR' }
+      const jsonResponse = { status: 'ERROR', title: err.message, code: err.errorCode || 'INTERNAL_ERROR' }
       if (!_.isEmpty(err.meta)) jsonResponse.meta = err.meta
       res.status(err.httpStatus || 500).json(jsonResponse)
     })

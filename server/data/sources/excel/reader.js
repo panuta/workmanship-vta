@@ -15,10 +15,10 @@ class ExcelReader {
   readShifts() {
     const worksheet = this.workbook.Sheets[this.workbook.SheetNames[1]]
     const columns = [
-      { key: 'code', range: 'A4:A65' },
-      { key: 'start', range: 'B4:B65', parser: cell => cell.w },
-      { key: 'end', range: 'C4:C65', parser: cell => cell.w },
-      { key: 'break', range: 'D4:D65', parser: cell => parseDuration(cell.w) },
+      { key: 'code', range: 'A5:A65' },
+      { key: 'start', range: 'B5:B65', parser: cell => cell.w },
+      { key: 'end', range: 'C5:C65', parser: cell => cell.w },
+      { key: 'break', range: 'D5:D65', parser: cell => parseDuration(cell.w) },
     ]
 
     const shiftData = readColumnsData(worksheet, columns)

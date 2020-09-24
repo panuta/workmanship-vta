@@ -1,10 +1,13 @@
+import moment from 'moment'
 import React, { useState } from 'react'
 import { Alert, Button, Modal, Space, Upload } from 'antd'
-import { FileExcelOutlined, WarningOutlined } from '@ant-design/icons';
+import { FileExcelOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 
 import './UploadModal.scss'
 
-const UploadModal = ({ monthYear, visible, onSuccess, onFailure, onCancel }) => {
+// TODO : Should have mode that disabled when detect if file existed
+
+const UploadModal = ({ visible, onSuccess, onFailure, onCancel }) => {
   const [uploadedFile, setUploadedFile] = useState(null)
   const [fileList, setFileList] = useState([])
 
@@ -47,12 +50,13 @@ const UploadModal = ({ monthYear, visible, onSuccess, onFailure, onCancel }) => 
     }
   }
 
-  const uploadUrl = `/api/uploadFile?month=${monthYear.month() + 1}&year=${monthYear.year()}`
+  const uploadDate = moment().subtract(1, 'days')  // Yesterday
+  const uploadUrl = `/api/uploadFile?date=${uploadDate.format('YYYY-MM-DD')}`
 
   return (
     <Modal
       title={
-        <Space>อัพโหลดไฟล์ สำหรับเดือน <span className="month-year">{monthYear.format('MMMM YYYY')}</span></Space>
+        <Space>อัพโหลดไฟล์สำหรับ <span className="upload-date">{uploadDate.format('วันddd ที่ D MMMM YYYY')}</span></Space>
       }
       className="upload-modal"
       visible={visible}
@@ -61,12 +65,15 @@ const UploadModal = ({ monthYear, visible, onSuccess, onFailure, onCancel }) => 
         <Button onClick={handleClose}>ปิดหน้าต่าง</Button>
       ]}
     >
-      <Space direction="vertical" size={12}>
-        <Upload name="file" action={uploadUrl} onChange={handleChange} fileList={fileList}>
-          <Button type="primary" icon={<FileExcelOutlined />}>เลือกไฟล์</Button>
-        </Upload>
-        <div className="warning"><WarningOutlined /> ถ้าหากเดือนที่กำลังอัพโหลดมีข้อมูลอยู่ก่อนแล้ว ข้อมูลของเดือนนั้นๆ จะถูกแทนที่ด้วยข้อมูลจากไฟล์ใหม่</div>
+      <Space direction="vertical" size={10}>
+        <div className="upload-button">
+          <Upload name="file" action={uploadUrl} onChange={handleChange} fileList={fileList}>
+            <Button type="primary" icon={<FileExcelOutlined />}>เลือกไฟล์</Button>
+          </Upload>
+        </div>
         {resultElement}
+        <div className="warning"><ExclamationCircleOutlined /> <strong>กรุณาตรวจสอบข้อมูลให้ถูกต้องก่อนอัพโหลด</strong> ผู้ใช้สามารถอัพโหลดข้อมูลในแต่ละวันได้เพียงครั้งเดียว</div>
+        <div className="warning"><ExclamationCircleOutlined /> ถ้าไฟล์ Excel มีข้อมูลใส่อยู่หลายวัน ระบบจะเลือกเฉพาะวันที่ระบุไว้เท่านั้น</div>
       </Space>
     </Modal>
   )

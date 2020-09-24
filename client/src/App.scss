@@ -12,12 +12,19 @@
     }
   }
 
-  .ant-menu .ant-menu-item {
-    font-size: 1rem;
+  .ant-menu {
+    .ant-menu-item {
+      font-size: 1rem;
 
-    .anticon {
-      font-size: 18px;
-      margin-right: 8px;
+      .anticon {
+        font-size: 18px;
+        margin-right: 8px;
+      }
+    }
+
+    .upload-button {
+      float: right;
+      margin-top: 9px;
     }
   }
 

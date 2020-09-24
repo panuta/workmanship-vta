@@ -61,9 +61,11 @@
     "express-fileupload": "^1.2.0",
     "http-errors": "^1.8.0",
     "lodash": "^4.17.20",
+    "moment": "^2.29.0",
     "morgan": "^1.10.0",
     "sequelize": "^6.3.5",
     "sqlite3": "^5.0.0",
+    "uuid": "^8.3.0",
     "xlsx": "^0.16.6"
   }
 }

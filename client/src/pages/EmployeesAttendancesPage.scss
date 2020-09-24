@@ -1,0 +1,75 @@
+.employees-attendances-page {
+  .attendances-table {
+    .table-title {
+      .table-title-left {
+
+      }
+
+      .ant-picker {
+        visibility: hidden;
+      }
+
+      .data-month {
+        margin-left: 7px;
+
+        .data-month-name {
+          font-size: 1.2rem;
+          font-weight: bold;
+        }
+
+        .data-month-period {
+          color: #777;
+          font-size: 0.9rem;
+        }
+      }
+
+      .ant-btn.change-month-button {
+        background-color: #EEE;
+        border-color: #bfbfbf;
+        margin-left: 15px;
+        padding: 5px 15px 4px;
+        border-radius: 5px;
+      }
+
+      .table-title-right {
+        padding-right: 7px;
+        text-align: right;
+      }
+
+      .data-latest-date {
+        color: #666;
+        margin-right: 5px;
+      }
+    }
+
+    .ant-table-thead .ant-table-cell {
+      text-align: center !important;
+    }
+
+    .employee-title {
+
+    }
+
+    .employee-subtitle {
+      color: #777;
+      font-size: 0.85rem;
+
+      .value {
+        color: #555;
+      }
+
+      .divider {
+        color: #BBB;
+        margin: 0 5px;
+      }
+    }
+
+    .value-zero {
+      color: #777;
+    }
+
+    .value-normal {
+      font-weight: bold;
+    }
+  }
+}

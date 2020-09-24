@@ -1,7 +1,5 @@
-import { processExcelFile } from '../data/sources/excel/process'
 import { InvalidRequestError, MissingAttributesError } from '../errors'
 import { getMonthlyEmployeeAttendances } from '../data'
-import { uploadExcelFile } from '../data/sources/excel/uploader'
 import { SourceFile } from '../data/models/definitions'
 
 const _parseMonthYearQuery = (requestQuery) => {
@@ -37,26 +35,4 @@ export const employeeAttendances = async (req, res, next) => {
       employees: []
     })
   }
-}
-
-export const uploadFile = async (req, res, next) => {
-  const monthYear = _parseMonthYearQuery(req.query)
-
-  if (!req.files || Object.keys(req.files).length === 0) {
-    throw new MissingAttributesError('No files were uploaded')
-  }
-
-  const sourceFile = await uploadExcelFile(monthYear, req.files.file)
-  await processExcelFile(sourceFile)
-
-  await SourceFile.update({ isSelected: false }, {
-    where: {
-      monthYear
-    }
-  })
-
-  sourceFile.isSelected = true
-  await sourceFile.save()
-
-  res.status(200).json({})
 }
