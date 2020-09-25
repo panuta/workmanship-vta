@@ -1,6 +1,18 @@
 import _ from 'lodash'
 import XLSX from 'xlsx'
 
+export const parseInteger = (str, defaultValue = null) => {
+  try {
+    const num = parseInt(str, 10)
+    if(_.isInteger(num)) {
+      return num
+    }
+  } catch (err) {
+    return defaultValue
+  }
+  return defaultValue
+}
+
 export const readColumnData = (worksheet, range, parser) => {
   const { s: { c: startCol, r: startRow }, e: { r: endRow } } = XLSX.utils.decode_range(range)
   return _.range(startRow, endRow + 1)
@@ -28,7 +40,7 @@ export const readCellValue = (worksheet, cellCode, defaultValue = '') => {
   return cell.v
 }
 
-export const columnRange = (start, end) => {
+export const generateColumnRange = (start, end) => {
   return _.range(XLSX.utils.decode_col(start), XLSX.utils.decode_col(end) + 1)
     .map(colIndex => XLSX.utils.encode_col(colIndex))
 }

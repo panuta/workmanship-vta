@@ -76,10 +76,10 @@ const EmployeesAttendancesPage = ({ dataUpdatedTimestamp }) => {
         <Col span={8} className="table-title-left">
           <Space>
             <Space direction="vertical" size={0} className="data-month">
-              <div className="data-month-name">{attendanceMonth.format('MMMM YYYY')}</div>
+              <div className="data-month-name">งวดเดือน {attendanceMonth.format('MMMM YYYY')}</div>
               <div className="data-month-period">{attendanceMonthPeriodStart.format('D MMMM YYYY')} - {attendanceMonthPeriodEnd.format('D MMMM YYYY')}</div>
             </Space>
-            <Button onClick={handleOnClick} className="change-month-button"><CalendarOutlined /> เปลี่ยนเดือน</Button>
+            <Button onClick={handleOnClick} className="change-month-button"><CalendarOutlined /> เปลี่ยนงวด</Button>
             <div>
               <DatePicker
                 picker="month"

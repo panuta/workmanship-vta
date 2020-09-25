@@ -5,8 +5,6 @@ import { FileExcelOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 
 import './UploadModal.scss'
 
-// TODO : Should have mode that disabled when detect if file existed
-
 const UploadModal = ({ visible, onSuccess, onFailure, onCancel }) => {
   const [uploadedFile, setUploadedFile] = useState(null)
   const [fileList, setFileList] = useState([])
@@ -51,7 +49,7 @@ const UploadModal = ({ visible, onSuccess, onFailure, onCancel }) => {
   }
 
   const uploadDate = moment().subtract(1, 'days')  // Yesterday
-  const uploadUrl = `/api/uploadFile?date=${uploadDate.format('YYYY-MM-DD')}`
+  const uploadUrl = '/api/uploadDailyFile'
 
   return (
     <Modal

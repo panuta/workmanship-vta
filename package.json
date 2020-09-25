@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "BABEL_DISABLE_CACHE=1 npx nodemon server/index.js --exec \"npx babel-node\"",
     "build": "babel server -d dist --copy-files",
-    "start": "NODE_ENV=production node dist/index.js"
+    "start": "NODE_ENV=production node dist/index.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",

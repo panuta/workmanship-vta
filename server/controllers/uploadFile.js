@@ -1,21 +1,21 @@
+import moment from 'moment'
+import { config } from '../config'
 import { MissingAttributesError } from '../errors'
 import { uploadExcelFile } from '../data/sources/excel/uploader'
-import { parseDateQueryParameter } from '../libs/queryParser'
 import { hasSourceFileByDate, insertSourceFile } from '../data/functions/sourceFile'
-import { processSourceFile } from '../data/sources/excel/processor'
+import { processDailySourceFile } from '../data/sources/excel/collectors'
 
-export const uploadFileController = async (req, res, next) => {
-  const dataSourceDate = parseDateQueryParameter(req.query, 'date')
-
+export const uploadDailyFileController = async (req, res, next) => {
   if (!req.files || Object.keys(req.files).length === 0) {
     throw new MissingAttributesError('No file were uploaded')
   }
 
+  const dataSourceDate = moment().subtract(1, 'days')
+
   // Check if source file for this uploadDate is already existed
-  // TODO => Need to uncomment this when release
-  // if(await hasSourceFileByDate(dataSourceDate)) {
-  //   throw new MissingAttributesError("Not allow to replace file that is already uploaded")
-  // }
+  if(!config.allowReplaceDailyUpload && await hasSourceFileByDate(dataSourceDate)) {
+    throw new MissingAttributesError("Not allow to replace file that is already uploaded")
+  }
 
   // Persist file to file systems
   const uploadFile = req.files.file
@@ -25,7 +25,12 @@ export const uploadFileController = async (req, res, next) => {
   const sourceFile = await insertSourceFile(dataSourceDate, uploadedFilePath, uploadFile.name)
 
   // Process uploaded Excel file
-  await processSourceFile(sourceFile)
+  // TODO => Backup database before process
+  await processDailySourceFile(sourceFile)
 
   res.status(200).json({ status: 'SUCCESS' })
+}
+
+export const uploadMonthlyFileController = async (req, res, next) => {
+  // const dataSourceDate = parseDateQueryParameter(req.query, 'date')
 }

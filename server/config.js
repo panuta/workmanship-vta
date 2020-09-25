@@ -5,9 +5,11 @@ export function initConfig() {
     default: {
       DEV: false,
       PORT: 3000,
+      allowReplaceDailyUpload: false
     },
     dev: {
       DEV: true,
+      allowReplaceDailyUpload: true
     },
     prd: {
       DEV: false,
