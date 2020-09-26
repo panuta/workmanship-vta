@@ -1,26 +1,26 @@
 import _ from 'lodash'
-import dayjs from 'dayjs'
 import { Op } from 'sequelize'
 import { EmployeeAttendance } from '../models'
-import { findEmployees } from './employee'
+import { getEmployees } from './employee'
+import { annualPeriod, inAttendanceMonth } from '../../utils/attendanceMonth'
 
-export const getEmployeeAttendances = async (attendanceMonth) => {
-  const date = dayjs(attendanceMonth)
-  const attendanceStart = date.startOf('month').toDate()
-  const attendanceEnd = date.endOf('month').toDate()
-
+export const getAnnualEmployeesAttendances = async (attendanceMonth, activeEmployeeCodes) => {
+  const [startAnnualPeriod, endAnnualPeriod] = annualPeriod(attendanceMonth)
   return EmployeeAttendance.findAll({
     where: {
       attendanceDate: {
-        [Op.between]: [attendanceStart, attendanceEnd]
-      }
+        [Op.between]: [startAnnualPeriod.toDate(), endAnnualPeriod.toDate()]
+      },
+      code: activeEmployeeCodes
     }
   })
 }
 
 export const getMonthlyEmployeesAttendances = async (attendanceMonth) => {
-  const activeEmployees = await findEmployees(attendanceMonth)
-  const employeesAttendances = await getEmployeeAttendances(attendanceMonth)
+  const activeEmployees = await getEmployees(attendanceMonth)
+
+  const activeEmployeeCodes = activeEmployees.map(employee => employee.code)
+  const employeesAttendances = await getAnnualEmployeesAttendances(attendanceMonth, activeEmployeeCodes)
 
   // Convert list of employees to employee mapping
   const employeeMapping = activeEmployees.reduce((accumulator, employee) => {
@@ -42,40 +42,69 @@ export const getMonthlyEmployeesAttendances = async (attendanceMonth) => {
   employeesAttendances.forEach(employeeAttendance => {
     // Only for employees that is valid within this month
     if(_.has(employeeMapping, [employeeAttendance.code])) {
-      const increaseWhenShiftIs = (shiftName, valueName) => {
+      const annualIncreaseWhenShiftIs = (shiftName, valueName) => {
         if(employeeAttendance.shift === shiftName) {
           employeeMapping[employeeAttendance.code][valueName] += 1
         }
       }
 
-      const increaseByValue = (valueName) => {
+      const annualIncreaseByValue = (valueName) => {
         if(_.isNumber(employeeAttendance[valueName])) {
           employeeMapping[employeeAttendance.code][valueName] += employeeAttendance[valueName]
         }
       }
 
-      increaseWhenShiftIs('พักร้อน', 'vacation')
-      increaseWhenShiftIs('ลาป่วย', 'sickLeave')
-      increaseWhenShiftIs('ลากิจ', 'casualLeave')
+      const monthlyIncreaseByValue = (valueName) => {
+        if(_.isNumber(employeeAttendance[valueName]) && inAttendanceMonth(employeeAttendance.attendanceDate, attendanceMonth)) {
+          employeeMapping[employeeAttendance.code][valueName] += employeeAttendance[valueName]
+        }
+      }
 
-      increaseByValue('compensation')
-      increaseByValue('usedCompensation')
-      increaseByValue('forceBreak')
-      increaseByValue('returnedForceBreak')
-      increaseByValue('minuteLate')
-      increaseByValue('minuteEarlyLeave')
-      increaseByValue('noShow')
-      increaseByValue('diligenceAllowance')
+      // Notice (Annual)
+      annualIncreaseByValue('notice')
 
-      // => ADD MORE HERE <=
+      // Vacation (Annual)
+      annualIncreaseWhenShiftIs('พักร้อน', 'vacation')
+
+      // Sick Leave (Annual)
+      annualIncreaseWhenShiftIs('ลาป่วย', 'sickLeave')
+
+      // Casual Leave (Annual)
+      annualIncreaseWhenShiftIs('ลากิจ', 'casualLeave')
+
+      // Compensation (Annual)
+      annualIncreaseByValue('compensation')
+
+      // Minutes Late (Monthly)
+      monthlyIncreaseByValue('minutesLate')
+
+      // Minutes Early Leave (Monthly)
+      monthlyIncreaseByValue('minutesEarlyLeave')
+
+      // No Show (Annual)
+      annualIncreaseByValue('noShow')
     }
   })
 
   return Object.values(employeeMapping).map(employeeData => {
     const employeeDict = employeeData.employee.toJSON()
-    return Object.assign(employeeDict, _.omit(employeeData, ['employee']))
+
+    /**
+     * Calculate Diligence Allowance (Monthly)
+     * - No casualLeave
+     * - No sickLeave
+     * - No minutesLate
+     * - No notice
+     */
+    const diligenceAllowance =
+      employeeData.casualLeave > 0 ||
+      employeeData.sickLeave > 0 ||
+      employeeData.minutesLate > 0 ||
+      employeeData.notice > 0
+        ? -1 : 0
+
+    return Object.assign(employeeDict, _.omit(employeeData, ['employee']), {
+      diligenceAllowance
+    })
   })
-
-  // TODO => Get data between 26-25 each month
-
 }

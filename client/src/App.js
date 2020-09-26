@@ -46,7 +46,7 @@ function App() {
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} selectedKeys={selectedKeys}>
           <Menu.Item key="1" icon={<SolutionOutlined />}><Link to="/">สถิติวันลา</Link></Menu.Item>
           <Menu.Item key="2" icon={<DollarOutlined />}><Link to="/payroll">บัญชีเงินเดือน</Link></Menu.Item>
-          <Menu.Item key="3" icon={<SettingOutlined />}><Link to="/settings">ตั้งค่าการใช้งาน</Link></Menu.Item>
+          <Menu.Item key="3" icon={<SettingOutlined />}><Link to="/settings">ตั้งค่าระบบ</Link></Menu.Item>
           <Button icon={<CloudUploadOutlined />} onClick={handleUploadButtonClick} className="upload-button">อัพโหลดไฟล์</Button>
         </Menu>
         <UploadModal

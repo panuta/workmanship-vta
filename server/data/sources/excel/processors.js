@@ -1,27 +1,23 @@
 import _ from 'lodash'
-import moment from 'moment'
-import { strict as assert } from 'assert'
+import { Op } from 'sequelize'
 
 import ExcelReader from './reader'
 import { Employee, EmployeeAttendance, Shift } from '../../models'
+import { getEmployees } from '../../functions/employee'
+import { toMomentObject } from '../../../utils/date'
 
 /**
  * Read employees' attendances data from Excel file and store it to database
  *
- * @param sourceFilePath: String - Path to Excel file
- * @param fromDate: Date - Collect Excel data from date
- * @param toDate: Date - Collect Excel data to date
+ * @param reader: ExcelReader
+ * @param fromDate: moment.Moment
+ * @param toDate: moment.Moment
  * @returns {Promise<void>}
  * @private
  */
-const _collectAndStoreData = async (sourceFilePath, fromDate, toDate) => {
-  assert(fromDate <= toDate)
-  assert(fromDate.getMonth() === toDate.getMonth())
-
-  const fromDateNumber = fromDate.getDate()
-  const toDateNumber = toDate.getDate()
-
-  const reader = new ExcelReader(sourceFilePath)
+const _processData = async (reader, fromDate, toDate) => {
+  const fromDateNumber = fromDate.date()
+  const toDateNumber = toDate.date()
 
   // Shifts
   const shiftData = reader.readShifts()
@@ -69,26 +65,44 @@ const _collectAndStoreData = async (sourceFilePath, fromDate, toDate) => {
   })
 
   // Combine Schedules and Input Daily
-  const employeesAttendances = Object.entries(employeeAttendanceMapping).map(([key, attendanceValues]) => {
-    const [employeeCode, attendanceDay] = key.split(':', 2)
-    return {
-      code: employeeCode,
-      attendanceDate: new Date(fromDate.getFullYear(), fromDate.getMonth(), parseInt(attendanceDay, 10)),
-      ...attendanceValues
-    }
-  })
+  const employeesAttendances = Object.entries(employeeAttendanceMapping)
+    .map(([key, attendanceValues]) => {
+      const [employeeCode, dateString] = key.split(':', 2)
+      return {
+        code: employeeCode,
+        attendanceDate: fromDate.clone().date(dateString).toDate(),
+        ...attendanceValues
+      }
+    })
 
   await EmployeeAttendance.bulkCreate(employeesAttendances, {
     updateOnDuplicate: ['shift', 'minutesLate', 'minutesEarlyLeave', 'overtime', 'compensation', 'notice']
   })
+
+  // Clean up employees' attendances after terminationDate
+  const deletePromises = []
+  (await getEmployees())
+    .filter(employee => employee.terminationDate !== null)
+    .forEach(employee => {
+      const terminationDate = toMomentObject(employee.terminationDate)
+
+      deletePromises.push(EmployeeAttendance.destroy({
+        where: {
+          code: employee.code,
+          attendanceDate: {
+            [Op.gt] : terminationDate.toDate()
+          }
+        }
+      }))
+    })
+
+  await Promise.all(deletePromises)
 }
 
 export const processDailySourceFile = async (sourceFile) => {
-  const dataSourceDate = moment(sourceFile.dataSourceDate).toDate()
-  await _collectAndStoreData(
-    sourceFile.filePath,
-    dataSourceDate,
-    dataSourceDate)
+  const reader = new ExcelReader(sourceFile.filePath)
+  const dataSourceDate = toMomentObject(sourceFile.dataSourceDate)
+  await _processData(reader, dataSourceDate, dataSourceDate)
 }
 
 export const processMonthlySourceFile = async (sourceFile, fromDate, toDate) => {

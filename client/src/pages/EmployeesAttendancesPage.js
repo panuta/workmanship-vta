@@ -1,5 +1,5 @@
 import moment from 'moment'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Alert, Button, DatePicker, Table, Row, Col, Space, Layout } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons'
 import { useAsyncRun, useAsyncTaskFetch } from 'react-hooks-async'
@@ -16,26 +16,32 @@ const DecimalRenderer = (text, record, index) => {
 
 const TABLE_COLUMN_WIDTH = 50
 const TABLE_COLUMNS = [
+  { title: 'รหัสพนักงาน', dataIndex: 'code', align: 'center', width: 60 },
   {
     title: 'พนักงาน', key: 'employee', fixed: 'left', width: 350,
     render: (text, record, index) => (
       <Space direction="vertical" size={2}>
         <div className="employee-title">{record.fullName}{ record.nickName && record.nickName !== '-' && <span> ( {record.nickName} )</span> }</div>
-        <div className="employee-subtitle">รหัส: <span className="value">{record.code}</span> <span className="divider">|</span> ตำแหน่ง: <span className="value">{record.position}</span></div>
+        <div className="employee-subtitle">ฝ่าย/แผนก: <span className="value">{record.department}</span> <span className="divider">|</span> ตำแหน่ง: <span className="value">{record.position}</span></div>
       </Space>
     )
   },
-  { title: 'สถานะพนักงาน', dataIndex: 'status', key: 'status', align: 'center', width: 140 },
-  { title: 'ใบเตือน', align: 'center', width: TABLE_COLUMN_WIDTH },
-  { title: 'พักร้อน', dataIndex: 'vacation', align: 'center', width: TABLE_COLUMN_WIDTH },
-  { title: 'ลาป่วย', dataIndex: 'sickLeave', align: 'center', width: TABLE_COLUMN_WIDTH },
-  { title: 'ลากิจ', dataIndex: 'casualLeave', align: 'center', width: TABLE_COLUMN_WIDTH },
-  { title: 'สะสม', dataIndex: 'compensation', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
-  { title: 'ใช้สะสม', dataIndex: 'usedCompensation', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
-  { title: (<span>สาย<br/>(นาที)</span>), dataIndex: 'minuteLate', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
-  { title: (<span>ออกก่อน<br/>(นาที)</span>), dataIndex: 'minuteEarlyLeave', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
-  { title: 'ขาด', dataIndex: 'noShow', align: 'center', width: TABLE_COLUMN_WIDTH },
-  { title: 'เบี้ยขยัน', dataIndex: 'diligenceAllowance', align: 'center', width: TABLE_COLUMN_WIDTH },
+  { title: 'สถานะพนักงาน', dataIndex: 'status', align: 'center', width: 100 },
+  { title: (<div>ใบเตือน<span>(ครั้ง)</span></div>), dataIndex: 'notice', align: 'center', width: TABLE_COLUMN_WIDTH },
+  { title: (<div>พักร้อน<span>(วัน)</span></div>), dataIndex: 'vacation', align: 'center', width: TABLE_COLUMN_WIDTH },
+  { title: (<div>ลาป่วย<span>(วัน)</span></div>), dataIndex: 'sickLeave', align: 'center', width: TABLE_COLUMN_WIDTH },
+  { title: (<div>ลากิจ<span>(วัน)</span></div>), dataIndex: 'casualLeave', align: 'center', width: TABLE_COLUMN_WIDTH },
+  { title: (<div>สะสม<span>(วัน)</span></div>), dataIndex: 'compensation', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
+  { title: (<div>สาย<span>(นาที)</span></div>), dataIndex: 'minutesLate', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
+  { title: (<div>ออกก่อน<span>(นาที)</span></div>), dataIndex: 'minutesEarlyLeave', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
+  { title: (<div>ขาด<span>(ครั้ง)</span></div>), dataIndex: 'noShow', align: 'center', width: TABLE_COLUMN_WIDTH },
+  { title: 'เบี้ยขยัน', dataIndex: 'diligenceAllowance', align: 'center', width: TABLE_COLUMN_WIDTH, render: (text, record, index) => {
+    if(record.diligenceAllowance === 0) {
+      return (<span className="qualified">ได้</span>)
+    } else {
+      return (<span className="disqualified">ไม่ได้</span>)
+    }
+  } },
 ]
 
 const { Content } = Layout
@@ -70,6 +76,8 @@ const EmployeesAttendancesPage = ({ dataUpdatedTimestamp }) => {
     history.push(`/?month=${getAttendanceMonthString(date)}`)
   }
 
+  console.log(fetchTask.result && fetchTask.result.latestDataSourceDate)
+
   const renderTableTitle = () => {
     return (
       <Row align="middle" className="table-title">
@@ -92,7 +100,7 @@ const EmployeesAttendancesPage = ({ dataUpdatedTimestamp }) => {
         <Col span={16} className="table-title-right">
           <Space size={15}>
             {fetchTask.result &&
-              <div className="data-latest-date">{fetchTask.result.latestDataSourceDate !== null ? `ข้อมูลล่าสุดถึงวันที่ ${moment(fetchTask.result.latestDataSourceDate, 'YYYY-MM-DD', true).format('D MMM YYYY')}` : 'ยังไม่มีข้อมูลเดือนนี้'}</div>
+              <div className="data-latest-date">{fetchTask.result.latestDataSourceDate !== null ? `ข้อมูลล่าสุดถึงวันที่ ${moment(fetchTask.result.latestDataSourceDate, 'YYYY-MM-DD', true).format('D MMM YYYY')}` : 'ยังไม่มีข้อมูล'}</div>
             }
           </Space>
         </Col>

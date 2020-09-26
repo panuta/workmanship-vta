@@ -1,12 +1,46 @@
 .settings-page {
+  h3 {
+    color: #333;
+    font-size: 1rem;
+    margin: 0;
+  }
+
   .ant-divider {
-    .ant-divider-inner-text {
-      color: #003a8c;
+    margin: 15px 0;
+  }
+
+  .settings-password {
+    input {
+      width: 300px;
     }
   }
 
-  .ant-divider-horizontal.ant-divider-with-text-left::before {
-    width: 20px;
+  .settings-items {
+    margin-top: 20px;
+
+    .settings-item {
+      margin-bottom: 20px;
+      background-color: #EEE;
+      padding: 15px 20px;
+    }
+
+    .settings-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .settings-description {
+      color: #777;
+      font-size: 0.9rem;
+    }
+
+    .settings-inputs {
+      margin: 10px 0 7px;
+
+      .ant-picker {
+        width: 160px;
+      }
+    }
   }
 
   .danger-title {

@@ -2,7 +2,7 @@ import _ from 'lodash'
 import dayjs from 'dayjs'
 import XLSX from 'xlsx'
 import { generateColumnRange, parseInteger, readCellValue, readColumnsData } from './utils'
-import { parseDuration } from '../../utils'
+import { parseDuration } from '../../../utils/date'
 
 class ExcelReader {
   constructor(filePath) {

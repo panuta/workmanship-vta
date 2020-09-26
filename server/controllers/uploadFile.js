@@ -1,19 +1,19 @@
 import moment from 'moment'
-import { config } from '../config'
+import { config as appConfig } from '../config'
 import { MissingAttributesError } from '../errors'
 import { uploadExcelFile } from '../data/sources/excel/uploader'
 import { hasSourceFileByDate, insertSourceFile } from '../data/functions/sourceFile'
-import { processDailySourceFile } from '../data/sources/excel/collectors'
+import { processDailySourceFile } from '../data/sources/excel/processors'
 
 export const uploadDailyFileController = async (req, res, next) => {
   if (!req.files || Object.keys(req.files).length === 0) {
     throw new MissingAttributesError('No file were uploaded')
   }
 
-  const dataSourceDate = moment().subtract(1, 'days')
+  const dataSourceDate = moment().subtract(1, 'days').startOf('day')
 
   // Check if source file for this uploadDate is already existed
-  if(!config.allowReplaceDailyUpload && await hasSourceFileByDate(dataSourceDate)) {
+  if(!appConfig.allowReplaceDailyUpload && await hasSourceFileByDate(dataSourceDate)) {
     throw new MissingAttributesError("Not allow to replace file that is already uploaded")
   }
 

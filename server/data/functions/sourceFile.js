@@ -19,3 +19,7 @@ export const insertSourceFile = async (dataSourceDate, uploadedFilePath, origina
     uploadedDatetime: new Date(),
   })
 }
+
+export const getLatestSourceFile = async () => {
+  return SourceFile.max('dataSourceDate')
+}

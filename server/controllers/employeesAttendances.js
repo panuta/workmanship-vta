@@ -1,40 +1,15 @@
-import { parseMonthYearQueryParameter } from '../libs/queryParser'
+import { parseMonthYearQueryParameter } from '../utils/queryParser'
 import { getMonthlyEmployeesAttendances } from '../data/functions/employeeAttendance'
+import { getLatestSourceFile } from '../data/functions/sourceFile'
 
 export const employeesAttendancesPageController = async (req, res, next) => {
   const attendanceMonth = parseMonthYearQueryParameter(req.query)
 
-  const employees = getMonthlyEmployeesAttendances(attendanceMonth)
-
-  // TODO : Send back latest data updated
+  const latestDataSourceDate = await getLatestSourceFile()
+  const employees = await getMonthlyEmployeesAttendances(attendanceMonth)
 
   res.status(200).json({
-    latestDataSourceDate: '2020-09-20',
+    latestDataSourceDate: latestDataSourceDate === 0 ? null : latestDataSourceDate,
     employees
   })
-
-  // if(await hasSourceFileByDate(dataSourceDate)) {
-  //
-  //   /*
-  //   const monthlyEmployeeAttendances = await getMonthlyEmployeeAttendances(monthYear)
-  //   res.status(200).json({
-  //     sourceId: sourceFile.sourceId,
-  //     sourceFilename: sourceFile.originalFilename,
-  //     sourceUploadedDatetime: sourceFile.uploadedDatetime,
-  //     employees: monthlyEmployeeAttendances
-  //   })
-  //    */
-  //
-  //   res.status(200).json({
-  //     sourceFilename: null,
-  //     sourceUploadedDatetime: null,
-  //     employees: []
-  //   })
-  // } else {
-  //   res.status(200).json({
-  //     sourceFilename: null,
-  //     sourceUploadedDatetime: null,
-  //     employees: []
-  //   })
-  // }
 }

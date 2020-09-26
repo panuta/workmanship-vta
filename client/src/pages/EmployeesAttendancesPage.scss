@@ -44,22 +44,44 @@
 
     .ant-table-thead .ant-table-cell {
       text-align: center !important;
+
+      span {
+        color: #888;
+        font-size: 0.75rem;
+        display: block;
+      }
+    }
+
+    .ant-table-tbody {
+      .ant-table-cell {
+        .qualified {
+
+        }
+
+        .disqualified {
+          color: rgb(168, 7, 26);
+          background-color: #fff1f0;
+          display: inline-block;
+          padding: 1px 4px;
+        }
+      }
     }
 
     .employee-title {
-
+      font-weight: 700;
+      font-size: 0.95rem;
     }
 
     .employee-subtitle {
-      color: #777;
+      color: #888;
       font-size: 0.85rem;
 
       .value {
-        color: #555;
+        color: #888;
       }
 
       .divider {
-        color: #BBB;
+        color: #DDD;
         margin: 0 5px;
       }
     }

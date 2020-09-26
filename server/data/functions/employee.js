@@ -1,8 +1,9 @@
 import { Op } from 'sequelize'
 import { Employee } from '../models'
-import { dateToString, monthPeriod } from '../utils'
+import { monthPeriod } from '../../utils/attendanceMonth'
+import { dateToString } from '../../utils/date'
 
-export const findEmployees = async (attendanceMonth) => {
+export const getEmployees = async (attendanceMonth) => {
   if(attendanceMonth !== undefined) {
     /**
      * Active employee
@@ -10,18 +11,16 @@ export const findEmployees = async (attendanceMonth) => {
      * AND
      * ( ( terminationDate is null ) OR ( terminationDate is after start of period ) )
      */
-    const [startPeriod, endPeriod] = monthPeriod(attendanceMonth.year(), attendanceMonth.month())
-    const startPeriodString = dateToString(startPeriod)
-    const endPeriodString = dateToString(endPeriod)
+    const [startPeriod, endPeriod] = monthPeriod(attendanceMonth)
     return Employee.findAll({
       where: {
         [Op.and]: [
           { startDate: {
-            [Op.lte]: endPeriodString } },
+            [Op.lte]: dateToString(endPeriod) } },
           { terminationDate: {
             [Op.or]: [
               { [Op.is]: null },
-              { [Op.gte]: startPeriodString },
+              { [Op.gte]: dateToString(startPeriod) },
             ] } },
         ]
       }

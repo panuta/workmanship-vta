@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import moment from 'moment'
 
 import { InvalidRequestError, MissingAttributesError } from '../errors'
@@ -24,7 +25,8 @@ export const parseDateQueryParameter = (queryParameters, parameterName) => {
  */
 export const parseMonthYearQueryParameter = (requestQuery) => {
   const { month: monthYear } = requestQuery
-  if(monthYear === undefined) {
+
+  if(_.isNil(monthYear)) {
     throw new MissingAttributesError('Require "month" parameter')
   }
 
