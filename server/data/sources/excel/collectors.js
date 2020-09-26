@@ -3,7 +3,7 @@ import moment from 'moment'
 import { strict as assert } from 'assert'
 
 import ExcelReader from './reader'
-import { Employee, EmployeeAttendance, Shift } from '../../models/definitions'
+import { Employee, EmployeeAttendance, Shift } from '../../models'
 
 /**
  * Read employees' attendances data from Excel file and store it to database
@@ -61,7 +61,7 @@ const _collectAndStoreData = async (sourceFilePath, fromDate, toDate) => {
       }
 
       setValue('minutesLate')
-      setValue('minutesEarlyLeft')
+      setValue('minutesEarlyLeave')
       setValue('overtime')
       setValue('compensation')
       setValue('notice')
@@ -79,7 +79,7 @@ const _collectAndStoreData = async (sourceFilePath, fromDate, toDate) => {
   })
 
   await EmployeeAttendance.bulkCreate(employeesAttendances, {
-    updateOnDuplicate: ['shift', 'minutesLate', 'minutesEarlyLeft', 'overtime', 'compensation', 'notice']
+    updateOnDuplicate: ['shift', 'minutesLate', 'minutesEarlyLeave', 'overtime', 'compensation', 'notice']
   })
 }
 

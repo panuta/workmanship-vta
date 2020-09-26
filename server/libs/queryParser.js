@@ -16,6 +16,12 @@ export const parseDateQueryParameter = (queryParameters, parameterName) => {
   return parsedDate.toDate()
 }
 
+/**
+ * Parse "month=MM-YYYY" from query parameter. MM is one-indexed (January is 01)
+ *
+ * @param requestQuery: Object
+ * @returns {moment.Moment}
+ */
 export const parseMonthYearQueryParameter = (requestQuery) => {
   const { month: monthYear } = requestQuery
   if(monthYear === undefined) {
@@ -25,7 +31,11 @@ export const parseMonthYearQueryParameter = (requestQuery) => {
   const [month, year] = monthYear.split('-', 2)
 
   try {
-    return moment({ year, month, day: 1 }).toDate()
+    return moment({
+      year,
+      month: parseInt(month, 10) - 1,
+      day: 1
+    }, true)
   } catch (error) {
     throw new InvalidRequestError('Month and year is invalid')
   }

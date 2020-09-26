@@ -1,4 +1,4 @@
-import { SourceFile } from '../models/definitions'
+import { SourceFile } from '../models'
 
 /**
  * Check if SourceFile for specified date existed

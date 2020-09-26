@@ -1,4 +1,4 @@
-import { Employee, EmployeeAttendance, Shift, SourceFile } from '../data/models/definitions'
+import { Employee, EmployeeAttendance, Shift, SourceFile } from '../data/models'
 
 export const deleteEverything = async (req, res, next) => {
   await SourceFile.destroy({ truncate: true })

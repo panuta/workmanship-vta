@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Employee functions findEmployees function should return active employees 1`] = `
+Array [
+  Object {
+    "code": "0002",
+    "company": "SE",
+    "department": "",
+    "fullName": "Employee2",
+    "id": 6,
+    "nickName": null,
+    "position": null,
+    "salutation": null,
+    "startDate": "2020-02-01",
+    "status": "",
+    "terminationDate": "2020-09-30",
+  },
+  Object {
+    "code": "0003",
+    "company": "SE",
+    "department": "",
+    "fullName": "Employee3",
+    "id": 7,
+    "nickName": null,
+    "position": null,
+    "salutation": null,
+    "startDate": "2020-01-01",
+    "status": "",
+    "terminationDate": null,
+  },
+]
+`;
+
+exports[`Employee functions findEmployees function should return all employees 1`] = `
+Array [
+  Object {
+    "code": "0001",
+    "company": "SE",
+    "department": "",
+    "fullName": "Employee1",
+    "id": 1,
+    "nickName": null,
+    "position": null,
+    "salutation": null,
+    "startDate": "2020-02-01",
+    "status": "",
+    "terminationDate": "2020-04-30",
+  },
+  Object {
+    "code": "0002",
+    "company": "SE",
+    "department": "",
+    "fullName": "Employee2",
+    "id": 2,
+    "nickName": null,
+    "position": null,
+    "salutation": null,
+    "startDate": "2020-02-01",
+    "status": "",
+    "terminationDate": "2020-09-30",
+  },
+  Object {
+    "code": "0003",
+    "company": "SE",
+    "department": "",
+    "fullName": "Employee3",
+    "id": 3,
+    "nickName": null,
+    "position": null,
+    "salutation": null,
+    "startDate": "2020-01-01",
+    "status": "",
+    "terminationDate": null,
+  },
+  Object {
+    "code": "0004",
+    "company": "SE",
+    "department": "",
+    "fullName": "Employee4",
+    "id": 4,
+    "nickName": null,
+    "position": null,
+    "salutation": null,
+    "startDate": "2020-10-01",
+    "status": "",
+    "terminationDate": null,
+  },
+]
+`;

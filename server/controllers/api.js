@@ -1,6 +1,6 @@
 import { InvalidRequestError, MissingAttributesError } from '../errors'
 import { getMonthlyEmployeeAttendances } from '../data'
-import { SourceFile } from '../data/models/definitions'
+import { SourceFile } from '../data/models'
 
 const _parseMonthYearQuery = (requestQuery) => {
   const { month, year } = requestQuery

@@ -1,3 +1,5 @@
+import path from 'path'
+
 let config
 
 export function initConfig() {
@@ -5,14 +7,16 @@ export function initConfig() {
     default: {
       DEV: false,
       PORT: 3000,
-      allowReplaceDailyUpload: false
+      allowReplaceDailyUpload: false,
+      databaseStorage: path.resolve(__dirname, '../database.sqlite'),
+      databaseTimestamps: true
     },
     dev: {
       DEV: true,
       allowReplaceDailyUpload: true
     },
     prd: {
-      DEV: false,
+      DEV: false
     }
   }
 

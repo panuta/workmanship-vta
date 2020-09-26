@@ -1,16 +1,16 @@
 import { parseMonthYearQueryParameter } from '../libs/queryParser'
-import { getMonthlyEmployeesAttendances } from '../data/functions/employeeAttendances'
+import { getMonthlyEmployeesAttendances } from '../data/functions/employeeAttendance'
 
 export const employeesAttendancesPageController = async (req, res, next) => {
   const attendanceMonth = parseMonthYearQueryParameter(req.query)
 
-  const result = getMonthlyEmployeesAttendances(attendanceMonth)
+  const employees = getMonthlyEmployeesAttendances(attendanceMonth)
 
   // TODO : Send back latest data updated
 
   res.status(200).json({
     latestDataSourceDate: '2020-09-20',
-    employees: []
+    employees
   })
 
   // if(await hasSourceFileByDate(dataSourceDate)) {
