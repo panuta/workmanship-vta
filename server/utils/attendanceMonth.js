@@ -14,8 +14,8 @@ export const monthPeriod = (attendanceMonth) => {
 export const annualPeriod = (attendanceMonth) => {
   try {
     return [
-      attendanceMonth.clone().subtract(1, 'years').month(12).date(26),
-      attendanceMonth.clone().month(12).date(25)
+      attendanceMonth.clone().subtract(1, 'years').month(11).date(26),
+      attendanceMonth.clone().month(11).date(25)
     ]
   } catch (err) {
     return null

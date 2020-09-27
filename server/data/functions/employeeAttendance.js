@@ -6,14 +6,16 @@ import { annualPeriod, inAttendanceMonth } from '../../utils/attendanceMonth'
 
 export const getAnnualEmployeesAttendances = async (attendanceMonth, activeEmployeeCodes) => {
   const [startAnnualPeriod, endAnnualPeriod] = annualPeriod(attendanceMonth)
-  return EmployeeAttendance.findAll({
-    where: {
-      attendanceDate: {
-        [Op.between]: [startAnnualPeriod.toDate(), endAnnualPeriod.toDate()]
-      },
-      code: activeEmployeeCodes
+
+  const where = {
+    attendanceDate: {
+      [Op.between]: [startAnnualPeriod.toDate(), endAnnualPeriod.toDate()]
     }
-  })
+  }
+  if(activeEmployeeCodes) {
+    where.code = activeEmployeeCodes
+  }
+  return EmployeeAttendance.findAll({ where })
 }
 
 export const getMonthlyEmployeesAttendances = async (attendanceMonth) => {

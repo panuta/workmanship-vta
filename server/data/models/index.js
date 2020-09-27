@@ -8,7 +8,7 @@ export class Shift extends Model {}
 export class Employee extends Model {}
 export class EmployeeAttendance extends Model {}
 
-let databaseConnection
+export let databaseConnection
 
 export const initDatabase = async () => {
   databaseConnection = new Sequelize({
@@ -70,11 +70,11 @@ export const initDatabase = async () => {
     code: { type: DataTypes.STRING, allowNull: false, unique: 'compositeIndex' },
     attendanceDate: { type: DataTypes.DATEONLY, allowNull: false, unique: 'compositeIndex' },
     shift: { type: DataTypes.STRING },
-    compensation: { type: DataTypes.DECIMAL },
-    minutesLate: { type: DataTypes.DECIMAL },
-    minutesEarlyLeave: { type: DataTypes.DECIMAL },
-    overtime: { type: DataTypes.DECIMAL },
-    notice: { type: DataTypes.INTEGER }
+    compensation: { type: DataTypes.DECIMAL, defaultValue: 0 },
+    minutesLate: { type: DataTypes.DECIMAL, defaultValue: 0 },
+    minutesEarlyLeave: { type: DataTypes.DECIMAL, defaultValue: 0 },
+    overtime: { type: DataTypes.DECIMAL, defaultValue: 0 },
+    notice: { type: DataTypes.INTEGER, defaultValue: 0 }
   }, {
     sequelize: databaseConnection,
     modelName: 'EmployeeAttendance',

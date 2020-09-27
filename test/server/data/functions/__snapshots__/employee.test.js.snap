@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Employee functions findEmployees function should return active employees 1`] = `
+exports[`Employee functions getEmployees function should return active employees 1`] = `
 Array [
   Object {
     "code": "0002",
@@ -31,7 +31,7 @@ Array [
 ]
 `;
 
-exports[`Employee functions findEmployees function should return all employees 1`] = `
+exports[`Employee functions getEmployees function should return all employees 1`] = `
 Array [
   Object {
     "code": "0001",

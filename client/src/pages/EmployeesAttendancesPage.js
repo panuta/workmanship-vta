@@ -76,8 +76,6 @@ const EmployeesAttendancesPage = ({ dataUpdatedTimestamp }) => {
     history.push(`/?month=${getAttendanceMonthString(date)}`)
   }
 
-  console.log(fetchTask.result && fetchTask.result.latestDataSourceDate)
-
   const renderTableTitle = () => {
     return (
       <Row align="middle" className="table-title">

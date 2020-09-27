@@ -2,7 +2,7 @@ import moment from 'moment'
 
 import Config from '../../../../server/config'
 import { initDatabase, dropDatabase, Employee } from '../../../../server/data/models'
-import { findEmployees } from '../../../../server/data/functions/employee'
+import { getEmployees } from '../../../../server/data/functions/employee'
 
 jest.mock('../../../../server/config')
 
@@ -24,7 +24,7 @@ describe('Employee functions', () => {
     await Employee.destroy({ where: {} })
   })
 
-  const initEmployeesTables = async () => {
+  const initEmployeeTable = async () => {
     const employeesData = [{
       code: '0001', fullName: 'Employee1',
       company: 'SE', status: '', department: '',
@@ -49,15 +49,15 @@ describe('Employee functions', () => {
     await Employee.bulkCreate(employeesData)
   }
 
-  describe('findEmployees function', () => {
+  describe('getEmployees function', () => {
     it('should return all employees', async () => {
-      await initEmployeesTables()
-      await expect(findEmployees()).resolves.toMatchSnapshot()
+      await initEmployeeTable()
+      await expect(getEmployees()).resolves.toMatchSnapshot()
     })
 
     it('should return active employees', async () => {
-      await initEmployeesTables()
-      await expect(findEmployees(moment({ year: 2020, month: 8 }))).resolves.toMatchSnapshot()
+      await initEmployeeTable()
+      await expect(getEmployees(moment({ year: 2020, month: 8 }))).resolves.toMatchSnapshot()
     })
   })
 })

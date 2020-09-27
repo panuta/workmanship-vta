@@ -21,5 +21,9 @@ export const insertSourceFile = async (dataSourceDate, uploadedFilePath, origina
 }
 
 export const getLatestSourceFile = async () => {
-  return SourceFile.max('dataSourceDate')
+  return SourceFile.findOne({
+    order: [
+      ['dataSourceDate', 'DESC']
+    ]
+  })
 }
