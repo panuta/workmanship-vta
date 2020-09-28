@@ -46,11 +46,9 @@ export const uploadMonthlyFile = async (req, res, next) => {
 
   // TODO : Check password
 
-  const attendanceMonth = fromDate.startOf('month')
-
   // Persist file to file systems
   const uploadFile = req.files.file
-  const uploadedFilePath = await uploadExcelFile(attendanceMonth, uploadFile)
+  const uploadedFilePath = await uploadExcelFile([fromDate, toDate], uploadFile)
 
   // Create file record on DB
   const insertPromises = [];

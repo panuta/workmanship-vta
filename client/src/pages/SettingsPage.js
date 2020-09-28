@@ -69,7 +69,7 @@ function SettingsPage() {
                 }}
               />
                 แล้ว
-              <Button type="primary" onClick={handleUploadButtonClick} disabled={disableMonthlyUpload}>เลือกไฟล์</Button>
+              <Button type="primary" onClick={handleUploadButtonClick} disabled={disableMonthlyUpload}>อัพโหลดไฟล์</Button>
               <UploadModal
                 dates={dates}
                 visible={uploadModalVisible}

@@ -23,9 +23,12 @@ export const _storeFileAtTemporaryLocation = async (file) => {
   return filePath
 }
 
-export const _generateUploadFilename = (uploadDate) => {
-  // TODO : Support date range
-  return `VTA-${moment(uploadDate).format('YYYY-MM-DD')}`
+export const _generateUploadFilename = (dataSourceDate) => {
+  if(_.isArray(dataSourceDate)) {
+    return `VTA-${dataSourceDate[0].format('YYYY-MM-DD')}--${dataSourceDate[1].format('YYYY-MM-DD')}`
+  } else {
+    return `VTA-${dataSourceDate.format('YYYY-MM-DD')}`
+  }
 }
 
 export const uploadExcelFile = async (dataSourceDate, file) => {
