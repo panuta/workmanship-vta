@@ -80,7 +80,7 @@ const _processData = async (reader, fromDate, toDate) => {
   })
 
   // Clean up employees' attendances after terminationDate
-  const deletePromises = []
+  const deletePromises = [];
   (await getEmployees())
     .filter(employee => employee.terminationDate !== null)
     .forEach(employee => {

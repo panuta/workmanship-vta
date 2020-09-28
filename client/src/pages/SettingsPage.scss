@@ -20,7 +20,7 @@
 
     .settings-item {
       margin-bottom: 20px;
-      background-color: #EEE;
+      border: 1px solid #ccc;
       padding: 15px 20px;
     }
 
@@ -36,9 +36,11 @@
 
     .settings-inputs {
       margin: 10px 0 7px;
+    }
 
-      .ant-picker {
-        width: 160px;
+    .settings-monthly-upload {
+      .ant-picker.ant-picker-range {
+        width: 280px;
       }
     }
   }

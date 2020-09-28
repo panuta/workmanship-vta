@@ -24,6 +24,7 @@ export const _storeFileAtTemporaryLocation = async (file) => {
 }
 
 export const _generateUploadFilename = (uploadDate) => {
+  // TODO : Support date range
   return `VTA-${moment(uploadDate).format('YYYY-MM-DD')}`
 }
 

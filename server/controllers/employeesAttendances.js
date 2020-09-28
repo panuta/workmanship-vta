@@ -4,7 +4,7 @@ import { parseMonthYearQueryParameter } from '../utils/queryParser'
 import { getMonthlyEmployeesAttendances } from '../data/functions/employeeAttendance'
 import { getLatestSourceFile } from '../data/functions/sourceFile'
 
-export const employeesAttendancesPageController = async (req, res, next) => {
+export const employeesAttendancesPage = async (req, res, next) => {
   const attendanceMonth = parseMonthYearQueryParameter(req.query)
 
   const latestSourceFile = await getLatestSourceFile()

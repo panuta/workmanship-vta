@@ -14,7 +14,7 @@ export const parseDateQueryParameter = (queryParameters, parameterName) => {
     throw new InvalidRequestError('Date parameter is invalid')
   }
 
-  return parsedDate.toDate()
+  return parsedDate
 }
 
 /**

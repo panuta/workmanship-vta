@@ -5,7 +5,7 @@ import { FileExcelOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 
 import './UploadModal.scss'
 
-const UploadModal = ({ visible, onSuccess, onFailure, onCancel }) => {
+const UploadModal = ({ dates, visible, onSuccess, onFailure, onCancel }) => {
   const [uploadedFile, setUploadedFile] = useState(null)
   const [fileList, setFileList] = useState([])
 
@@ -48,13 +48,22 @@ const UploadModal = ({ visible, onSuccess, onFailure, onCancel }) => {
     }
   }
 
-  const uploadDate = moment().subtract(1, 'days')  // Yesterday
-  const uploadUrl = '/api/uploadDailyFile'
+  // dates parameter
+  let uploadDateText
+  let uploadUrl
+  if(Array.isArray(dates) && dates.filter(date => date !== null).length === 2) {
+    uploadDateText = `${dates[0].date()} - ${dates[1].date()} ${moment(dates[0]).format('MMMM YYYY')}`
+    uploadUrl = `/api/uploadMonthlyFile?from=${dates[0].format('YYYY-MM-DD')}&to=${dates[1].format('YYYY-MM-DD')}`
+  } else {
+    // Default to yesterday
+    uploadDateText = moment().subtract(1, 'days').format('วันddd ที่ D MMMM YYYY')
+    uploadUrl = '/api/uploadDailyFile'
+  }
 
   return (
     <Modal
       title={
-        <Space>อัพโหลดไฟล์สำหรับ <span className="upload-date">{uploadDate.format('วันddd ที่ D MMMM YYYY')}</span></Space>
+        <Space>อัพโหลดไฟล์สำหรับ <span className="upload-date">{uploadDateText}</span></Space>
       }
       className="upload-modal"
       visible={visible}
