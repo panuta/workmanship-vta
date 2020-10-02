@@ -8,6 +8,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { getAttendanceMonth, getAttendanceMonthString } from '../libs/attendanceMonth'
 
 import './EmployeesAttendancesPage.scss'
+import UploadDates from '../components/UploadDates'
 
 const DecimalRenderer = (text, record, index) => {
   const className = text === 0 ? 'value-zero' : 'value-normal'
@@ -78,31 +79,23 @@ const EmployeesAttendancesPage = ({ dataUpdatedTimestamp }) => {
 
   const renderTableTitle = () => {
     return (
-      <Row align="middle" className="table-title">
-        <Col span={8} className="table-title-left">
-          <Space>
-            <Space direction="vertical" size={0} className="data-month">
-              <div className="data-month-name">งวดเดือน {attendanceMonth.format('MMMM YYYY')}</div>
-              <div className="data-month-period">{attendanceMonthPeriodStart.format('D MMMM YYYY')} - {attendanceMonthPeriodEnd.format('D MMMM YYYY')}</div>
-            </Space>
-            <Button onClick={handleOnClick} className="change-month-button"><CalendarOutlined /> เปลี่ยนงวด</Button>
-            <div>
-              <DatePicker
-                picker="month"
-                open={datePickerOpen}
-                value={attendanceMonth}
-                onChange={handleMonthChange} />
-            </div>
+      <div className="table-title">
+        <div className="month-year">
+          <Space direction="vertical" size={0} className="data-month">
+            <div className="data-month-name">งวดเดือน {attendanceMonth.format('MMMM YYYY')}</div>
+            <div className="data-month-period">{attendanceMonthPeriodStart.format('D MMMM YYYY')} - {attendanceMonthPeriodEnd.format('D MMMM YYYY')}</div>
           </Space>
-        </Col>
-        <Col span={16} className="table-title-right">
-          <Space size={15}>
-            {fetchTask.result &&
-              <div className="data-latest-date">{fetchTask.result.latestDataSourceDate !== null ? `ข้อมูลล่าสุดถึงวันที่ ${moment(fetchTask.result.latestDataSourceDate, 'YYYY-MM-DD', true).format('D MMM YYYY')}` : 'ยังไม่มีข้อมูล'}</div>
-            }
-          </Space>
-        </Col>
-      </Row>
+          <Button onClick={handleOnClick} className="change-month-button"><CalendarOutlined /> เปลี่ยนงวด</Button>
+          <DatePicker
+            picker="month"
+            open={datePickerOpen}
+            value={attendanceMonth}
+            onChange={handleMonthChange} />
+        </div>
+        <div className="dates">
+          <UploadDates />
+        </div>
+      </div>
     )
   }
 

@@ -1,0 +1,29 @@
+.upload-dates-component {
+  .date {
+    font-size: 0.75rem;
+    text-align: center;
+
+    display: inline-block;
+    padding: 3px 0 2px;
+    margin-right: 3px;
+    width: 23px;
+
+
+    &.no-data {
+      background-color: #ffccc7;
+      color: #333;
+      font-weight: bold;
+    }
+
+    &.has-data {
+      background-color: #b7eb8f;
+      color: #333;
+      font-weight: bold;
+    }
+
+    &.not-applicable {
+      background-color: #f0f0f0;
+      color: #777;
+    }
+  }
+}

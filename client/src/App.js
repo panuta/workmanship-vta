@@ -44,8 +44,8 @@ function App() {
       <Header className="App-Header">
         <div className="App-Brand">Sahayont Energy</div>
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} selectedKeys={selectedKeys}>
-          <Menu.Item key="1" icon={<SolutionOutlined />}><Link to="/">สถิติวันลา</Link></Menu.Item>
-          <Menu.Item key="2" icon={<DollarOutlined />}><Link to="/payroll">บัญชีเงินเดือน</Link></Menu.Item>
+          <Menu.Item key="1" icon={<SolutionOutlined />}><Link to="/">สถิติวันทำงาน</Link></Menu.Item>
+          <Menu.Item key="2" icon={<DollarOutlined />}><Link to="/payroll">ระบบเงินเดือน</Link></Menu.Item>
           <Menu.Item key="3" icon={<SettingOutlined />}><Link to="/settings">ตั้งค่าระบบ</Link></Menu.Item>
           <Button icon={<CloudUploadOutlined />} onClick={handleUploadButtonClick} className="upload-button">อัพโหลดไฟล์</Button>
         </Menu>
