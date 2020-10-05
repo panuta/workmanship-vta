@@ -56,8 +56,8 @@ const _processData = async (reader, fromDate, toDate) => {
           _.set(employeeAttendanceMapping, [`${employeeCode}:${date}`, name], employeeInputDailyData[key])
       }
 
-      setValue('minutesLate')  // TODO => value is minutes
-      setValue('minutesEarlyLeave')  // TODO => value is minutes
+      setValue('minutesLate')
+      setValue('minutesEarlyLeave')
       setValue('overtime')
       setValue('compensation')
       setValue('notice')
@@ -85,7 +85,6 @@ const _processData = async (reader, fromDate, toDate) => {
     .filter(employee => employee.terminationDate !== null)
     .forEach(employee => {
       const terminationDate = toMomentObject(employee.terminationDate)
-
       deletePromises.push(EmployeeAttendance.destroy({
         where: {
           code: employee.code,

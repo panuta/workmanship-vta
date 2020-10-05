@@ -1,7 +1,7 @@
 import _ from 'lodash'
-import dayjs from 'dayjs'
+import moment from 'moment'
 import XLSX from 'xlsx'
-import { generateColumnRange, parseInteger, readCellValue, readColumnsData } from './utils'
+import { generateColumnRange, parseDate, parseInteger, readCellValue, readColumnsData } from './utils'
 import { parseDuration } from '../../../utils/date'
 
 class ExcelReader {
@@ -45,8 +45,8 @@ class ExcelReader {
       { key: 'status', range: `G${START_ROW}:G${START_ROW + MAX_EMPLOYEE_ROWS}` },
       { key: 'department', range: `H${START_ROW}:H${START_ROW + MAX_EMPLOYEE_ROWS}` },
       { key: 'position', range: `I${START_ROW}:I${START_ROW + MAX_EMPLOYEE_ROWS}` },
-      { key: 'startDate', range: `J${START_ROW}:J${START_ROW + MAX_EMPLOYEE_ROWS}`, parser: cell => cell.w ? dayjs(cell.w, 'D/M/YY').toDate() : null },
-      { key: 'terminationDate', range: `K${START_ROW}:K${START_ROW + MAX_EMPLOYEE_ROWS}`, parser: cell => cell.w ? dayjs(cell.w, 'D/M/YY').toDate() : null },
+      { key: 'startDate', range: `J${START_ROW}:J${START_ROW + MAX_EMPLOYEE_ROWS}`, parser: cell => parseDate(cell.w, 'M/D/YY') },
+      { key: 'terminationDate', range: `K${START_ROW}:K${START_ROW + MAX_EMPLOYEE_ROWS}`, parser: cell => parseDate(cell.w, 'M/D/YY') },
     ]
 
     const employeeData = readColumnsData(worksheet, columns)
@@ -95,9 +95,11 @@ class ExcelReader {
     do {
       const dateCellValue = readCellValue(worksheet, XLSX.utils.encode_cell({ c: checkingDateColumnIndex, r: FIRST_DATE_CELL.r }))
       const dateCellNumValue = parseInteger(dateCellValue, null)
-      if(dateCellNumValue !== null && dateCellNumValue >= fromDateNumber && dateCellNumValue <= toDateNumber) {
-        extractingDateColumnIndexes.push(checkingDateColumnIndex)
+      if(dateCellNumValue !== null) {
         consecutiveBlankCells = 0
+        if(dateCellNumValue >= fromDateNumber && dateCellNumValue <= toDateNumber) {
+          extractingDateColumnIndexes.push(checkingDateColumnIndex)
+        }
       } else {
         consecutiveBlankCells += 1
       }
@@ -115,11 +117,11 @@ class ExcelReader {
         const range = `${XLSX.utils.encode_cell({ c: checkingColumnIndex, r: FIRST_DATE_CELL.r + 3 })}:${XLSX.utils.encode_cell({ c: checkingColumnIndex, r: FIRST_DATE_CELL.r + 3 + MAX_EMPLOYEE_ROWS })}`
 
         if(headerValue === 'สาย') {
-          extractingColumns.push({ key: `${fromDateNumber + i}.minutesLate`, range })
+          extractingColumns.push({ key: `${fromDateNumber + i}.minutesLate`, range, parser: cell => parseDuration(cell.w) })
         } else if(headerValue === 'ออกก่อน') {
-          extractingColumns.push({ key: `${fromDateNumber + i}.minutesEarlyLeft`, range })
+          extractingColumns.push({ key: `${fromDateNumber + i}.minutesEarlyLeft`, range, parser: cell => parseDuration(cell.w) })
         } else if(headerValue === 'OT') {
-          extractingColumns.push({ key: `${fromDateNumber + i}.overtime`, range })
+          extractingColumns.push({ key: `${fromDateNumber + i}.overtime`, range, parser: cell => parseDuration(cell.w) })
         } else if(headerValue === 'สะสม') {
           extractingColumns.push({ key: `${fromDateNumber + i}.compensation`, range })
         } else if(headerValue === 'ใบเตือน') {

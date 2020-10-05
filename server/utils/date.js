@@ -1,8 +1,22 @@
 import _ from 'lodash'
 import moment from 'moment'
 
-export const parseDuration = (text) => {
-  const [hoursText, minutesText] = text.split('.')
+export const parseDuration = (text, delimiter) => {
+  let hoursText
+  let minutesText
+  if(delimiter === undefined) {
+    if(text.indexOf('.') !== -1) {
+      [hoursText, minutesText] = text.split('.')
+    } else if(text.indexOf(':') !== -1) {
+      [hoursText, minutesText] = text.split(':')
+    } else {
+      hoursText = "0"
+      minutesText = text
+    }
+  } else {
+    [hoursText, minutesText] = text.split(delimiter)
+  }
+
   try {
     return parseInt(hoursText, 10) * 60 + parseInt(minutesText, 10)
   } catch (error) {

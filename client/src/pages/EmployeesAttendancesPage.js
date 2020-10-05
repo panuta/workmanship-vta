@@ -7,12 +7,23 @@ import { useHistory, useLocation } from 'react-router-dom'
 
 import { getAttendanceMonth, getAttendanceMonthString } from '../libs/attendanceMonth'
 
-import './EmployeesAttendancesPage.scss'
 import UploadDates from '../components/UploadDates'
+import { padZero } from '../libs/utils'
+
+import './EmployeesAttendancesPage.scss'
 
 const DecimalRenderer = (text, record, index) => {
   const className = text === 0 ? 'value-zero' : 'value-normal'
   return <span className={className}>{(Math.round(text * 100) / 100).toFixed(2)}</span>
+}
+
+const DurationRenderer = (text, record, index) => {
+  const className = text === 0 ? 'value-zero' : 'value-normal'
+
+  const hours = padZero(Math.round(text / 60) + "", 2)
+  const minutes = padZero((text - hours * 60) + "", 2)
+
+  return <span className={className}>{hours}:{minutes}</span>
 }
 
 const TABLE_COLUMN_WIDTH = 50
@@ -33,8 +44,8 @@ const TABLE_COLUMNS = [
   { title: (<div>ลาป่วย<span>(วัน)</span></div>), dataIndex: 'sickLeave', align: 'center', width: TABLE_COLUMN_WIDTH },
   { title: (<div>ลากิจ<span>(วัน)</span></div>), dataIndex: 'casualLeave', align: 'center', width: TABLE_COLUMN_WIDTH },
   { title: (<div>สะสม<span>(วัน)</span></div>), dataIndex: 'compensation', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
-  { title: (<div>สาย<span>(นาที)</span></div>), dataIndex: 'minutesLate', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
-  { title: (<div>ออกก่อน<span>(นาที)</span></div>), dataIndex: 'minutesEarlyLeave', align: 'right', width: TABLE_COLUMN_WIDTH, render: DecimalRenderer },
+  { title: (<div>สาย<span>(นาที)</span></div>), dataIndex: 'minutesLate', align: 'right', width: TABLE_COLUMN_WIDTH, render: DurationRenderer },
+  { title: (<div>ออกก่อน<span>(นาที)</span></div>), dataIndex: 'minutesEarlyLeave', align: 'right', width: TABLE_COLUMN_WIDTH, render: DurationRenderer },
   { title: (<div>ขาด<span>(ครั้ง)</span></div>), dataIndex: 'noShow', align: 'center', width: TABLE_COLUMN_WIDTH },
   { title: 'เบี้ยขยัน', dataIndex: 'diligenceAllowance', align: 'center', width: TABLE_COLUMN_WIDTH, render: (text, record, index) => {
     if(record.diligenceAllowance === 0) {

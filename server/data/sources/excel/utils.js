@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import XLSX from 'xlsx'
+import moment from 'moment'
 
 export const parseInteger = (str, defaultValue = null) => {
   try {
@@ -11,6 +12,14 @@ export const parseInteger = (str, defaultValue = null) => {
     return defaultValue
   }
   return defaultValue
+}
+
+export const parseDate = (str, format) => {
+  const momentObject = moment.utc(str, format)
+  if(momentObject.isValid()) {
+    return momentObject
+  }
+  return null
 }
 
 export const readColumnData = (worksheet, range, parser) => {
