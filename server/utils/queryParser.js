@@ -9,7 +9,7 @@ export const parseDateQueryParameter = (queryParameters, parameterName) => {
     throw new MissingAttributesError('Require "date" parameter')
   }
 
-  const parsedDate = moment(date, 'YYYY-MM-DD', true)
+  const parsedDate = moment.utc(date, 'YYYY-MM-DD', true)
   if(!parsedDate.isValid()) {
     throw new InvalidRequestError('Date parameter is invalid')
   }
@@ -33,7 +33,7 @@ export const parseMonthYearQueryParameter = (requestQuery) => {
   const [month, year] = monthYear.split('-', 2)
 
   try {
-    return moment({
+    return moment.utc({
       year,
       month: parseInt(month, 10) - 1,
       day: 1

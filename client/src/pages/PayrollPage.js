@@ -9,8 +9,7 @@ const { Content } = Layout
 const TABLE_COLUMNS = [
   { title: 'งวดเดือน', dataIndex: 'monthYear', align: 'left', width: 240,
     render: (text, record, index) => {
-      const [year, month, ] = text.split('-')
-      return <span>{moment({year, month}).format('MMMM YYYY')}</span>
+      return <span>{moment(text).format('MMMM YYYY')}</span>
     }
   },
   { title: 'ดาวน์โหลดไฟล์', dataIndex: 'files', align: 'left',

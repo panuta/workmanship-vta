@@ -52,11 +52,11 @@ const UploadModal = ({ dates, visible, onSuccess, onFailure, onCancel }) => {
   let uploadDateText
   let uploadUrl
   if(Array.isArray(dates) && dates.filter(date => date !== null).length === 2) {
-    uploadDateText = `${dates[0].date()} - ${dates[1].date()} ${moment(dates[0]).format('MMMM YYYY')}`
+    uploadDateText = `${dates[0].date()} - ${dates[1].date()} ${moment.utc(dates[0]).format('MMMM YYYY')}`
     uploadUrl = `/api/uploadMonthlyFile?from=${dates[0].format('YYYY-MM-DD')}&to=${dates[1].format('YYYY-MM-DD')}`
   } else {
     // Default to yesterday
-    uploadDateText = moment().subtract(1, 'days').format('วันddd ที่ D MMMM YYYY')
+    uploadDateText = moment.utc().subtract(1, 'days').format('วันddd ที่ D MMMM YYYY')
     uploadUrl = '/api/uploadDailyFile'
   }
 

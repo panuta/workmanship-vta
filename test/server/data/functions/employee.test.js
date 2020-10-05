@@ -57,7 +57,7 @@ describe('Employee functions', () => {
 
     it('should return active employees', async () => {
       await initEmployeeTable()
-      await expect(getEmployees(moment({ year: 2020, month: 8 }))).resolves.toMatchSnapshot()
+      await expect(getEmployees(moment.utc({ year: 2020, month: 8 }))).resolves.toMatchSnapshot()
     })
   })
 })

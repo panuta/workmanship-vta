@@ -13,10 +13,10 @@ export const parseDuration = (text) => {
 export const toMomentObject = (date, defaultParsingFormat = 'YYYY-MM-DD') => {
   if(_.isNil(date)) return null
   if(moment.isMoment(date)) return date.clone()
-  if(_.isDate(date)) return moment(date)
+  if(_.isDate(date)) return moment.utc(date).startOf('day')
   if(_.isString(date)) {
     try {
-      const parsed = moment(date, defaultParsingFormat, true)
+      const parsed = moment.utc(date, defaultParsingFormat, true)
       if(parsed.isValid()) return parsed
     } catch (err) {
       return null

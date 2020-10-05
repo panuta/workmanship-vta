@@ -52,6 +52,7 @@ export const getMonthlyEmployeesAttendances = async (attendanceMonth) => {
 
       const annualIncreaseByValue = (valueName) => {
         if(_.isNumber(employeeAttendance[valueName])) {
+
           employeeMapping[employeeAttendance.code][valueName] += employeeAttendance[valueName]
         }
       }
@@ -84,7 +85,7 @@ export const getMonthlyEmployeesAttendances = async (attendanceMonth) => {
       monthlyIncreaseByValue('minutesEarlyLeave')
 
       // No Show (Annual)
-      annualIncreaseByValue('noShow')
+      annualIncreaseWhenShiftIs('ขาด', 'noShow')
     }
   })
 

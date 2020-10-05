@@ -56,8 +56,8 @@ const _processData = async (reader, fromDate, toDate) => {
           _.set(employeeAttendanceMapping, [`${employeeCode}:${date}`, name], employeeInputDailyData[key])
       }
 
-      setValue('minutesLate')
-      setValue('minutesEarlyLeave')
+      setValue('minutesLate')  // TODO => value is minutes
+      setValue('minutesEarlyLeave')  // TODO => value is minutes
       setValue('overtime')
       setValue('compensation')
       setValue('notice')

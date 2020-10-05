@@ -11,7 +11,7 @@ export const uploadDailyFile = async (req, res, next) => {
     throw new MissingAttributesError('No file were uploaded')
   }
 
-  const dataSourceDate = moment().subtract(1, 'days').startOf('day')
+  const dataSourceDate = moment.utc().subtract(1, 'days').startOf('day')
 
   // Check if source file for this uploadDate is already existed
   if(!appConfig.allowReplaceDailyUpload && await hasSourceFileByDate(dataSourceDate)) {

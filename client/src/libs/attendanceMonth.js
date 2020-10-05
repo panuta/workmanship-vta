@@ -4,17 +4,17 @@ import moment from 'moment'
 export const getAttendanceMonth = (monthString) => {
   let currentDate
   if(monthString === undefined || monthString === null) {
-    currentDate = moment()
+    currentDate = moment.utc()
   } else {
     const [month, year] = monthString.split('-', 2)
-    currentDate = moment({ year, month: month - 1, day: 1 })
+    currentDate = moment.utc({ year, month: month - 1, day: 1 })
   }
 
   const _generate = (start, end) => {
     return [
-      moment({ year: end.year(), month: end.month(), day: 1 }),
-      moment({ year: start.year(), month: start.month(), day: 26 }),
-      moment({ year: end.year(), month: end.month(), day: 25 })
+      moment.utc({ year: end.year(), month: end.month(), day: 1 }),
+      moment.utc({ year: start.year(), month: start.month(), day: 26 }),
+      moment.utc({ year: end.year(), month: end.month(), day: 25 })
     ]
   }
 

@@ -85,6 +85,12 @@ export const initDatabase = async () => {
   await EmployeeAttendance.sync({ alter: false })
 }
 
+export const closeDatabase = async () => {
+  if(databaseConnection !== undefined) {
+    await databaseConnection.close()
+  }
+}
+
 export const dropDatabase = async () => {
   if(databaseConnection !== undefined) {
     await databaseConnection.drop()
