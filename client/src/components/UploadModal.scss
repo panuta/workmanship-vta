@@ -1,5 +1,3 @@
-@use "../styles/Common";
-
 .upload-modal {
   .ant-modal-header {
     padding: 15px 20px 12px;
@@ -24,7 +22,7 @@
       font-size: 0.95rem;
 
       .anticon {
-        color: Common.$redColor;
+        color: rgb(168, 7, 26);
       }
 
       strong {
