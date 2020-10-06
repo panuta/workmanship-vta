@@ -18,11 +18,9 @@ const DecimalRenderer = (text, record, index) => {
 
 const DurationRenderer = (text, record, index) => {
   const className = text === 0 ? 'value-zero' : 'value-normal'
-
-  const hours = padZero(Math.round(text / 60) + "", 2)
-  const minutes = padZero((text - hours * 60) + "", 2)
-
-  return <span className={className}>{hours}:{minutes}</span>
+  const hours = Math.floor(text / 60)
+  const minutes = text - hours * 60
+  return <span className={className}>{padZero(hours + "", 2)}:{padZero(minutes + "", 2)}</span>
 }
 
 const TABLE_COLUMN_WIDTH = 50
