@@ -2,9 +2,9 @@ import moment from 'moment'
 import { config as appConfig } from '../config'
 import { InvalidRequestError, MissingAttributesError } from '../errors'
 import { uploadExcelFile } from '../data/sources/excel/uploader'
-import { hasSourceFileByDate, insertSourceFile } from '../data/functions/sourceFile'
-import { processDailySourceFile } from '../data/sources/excel/processors'
-import { parseDateQueryParameter, parseMonthYearQueryParameter } from '../utils/queryParser'
+import { hasSourceFileByDate, upsertSourceFile } from '../data/functions/sourceFile'
+import { processDailySourceFile, processMonthlySourceFile } from '../data/sources/excel/processors'
+import { parseDateQueryParameter } from '../utils/queryParser'
 
 export const uploadDailyFile = async (req, res, next) => {
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -23,7 +23,7 @@ export const uploadDailyFile = async (req, res, next) => {
   const uploadedFilePath = await uploadExcelFile(dataSourceDate, uploadFile)
 
   // Create file record on DB
-  const sourceFile = await insertSourceFile(dataSourceDate, uploadedFilePath, uploadFile.name)
+  const [sourceFile, ] = await upsertSourceFile(dataSourceDate, uploadedFilePath, uploadFile.name)
 
   // Process uploaded Excel file
   // TODO => Backup database before process
@@ -52,10 +52,14 @@ export const uploadMonthlyFile = async (req, res, next) => {
 
   // Create file record on DB
   const insertPromises = [];
-  for (const d = fromDate; d.diff(toDate, 'days') <= 0; d.add(1, 'day')) {
-    insertPromises.push(insertSourceFile(d.toDate(), uploadedFilePath, uploadFile.name))
+  for (const d = fromDate.clone(); d.diff(toDate, 'days') <= 0; d.add(1, 'day')) {
+    insertPromises.push(upsertSourceFile(d, uploadedFilePath, uploadFile.name))
   }
-  await Promise.all(insertPromises)
+  const upsertResults = await Promise.all(insertPromises)
+
+  // Process uploaded Excel file
+  const [sourceFile, ] = upsertResults[0]
+  await processMonthlySourceFile(sourceFile, fromDate, toDate)
 
   res.status(200).json({ status: 'SUCCESS' })
 }

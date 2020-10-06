@@ -60,7 +60,7 @@ function SettingsPage() {
         <div className="settings-items">
           <div className="settings-item settings-monthly-upload">
             <div className="settings-title">อัพโหลดข้อมูลเป็นรายเดือน</div>
-            <div className="settings-description">เลือกวันที่ที่ต้องการให้ระบบดึงข้อมูลจากไฟล์ (ต้องอยู่ภายในเดือนเดียวกัน) จากนั้นจึงกด "เลือกไฟล์"</div>
+            <div className="settings-description">เลือกวันที่ที่ต้องการให้ระบบดึงข้อมูลจากไฟล์ (ต้องอยู่ภายในเดือนเดียวกัน) จากนั้นจึงกด "อัพโหลดไฟล์"</div>
             <Space className="settings-inputs">
               <RangePicker
                 disabledDate={disabledDate}

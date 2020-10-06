@@ -1,17 +1,17 @@
-import _ from 'lodash'
-
 import { parseMonthYearQueryParameter } from '../utils/queryParser'
 import { getMonthlyEmployeesAttendances } from '../data/functions/employeeAttendance'
-import { getLatestSourceFile } from '../data/functions/sourceFile'
+import { getMonthlySourceFiles } from '../data/functions/sourceFile'
 
 export const employeesAttendancesPage = async (req, res, next) => {
   const attendanceMonth = parseMonthYearQueryParameter(req.query)
 
-  const latestSourceFile = await getLatestSourceFile()
   const employees = await getMonthlyEmployeesAttendances(attendanceMonth)
 
+  const sourceFiles = await getMonthlySourceFiles(attendanceMonth)
+  const sourceDates = sourceFiles.map(sourceFile => sourceFile.dataSourceDate)
+
   res.status(200).json({
-    latestDataSourceDate: _.isNil(latestSourceFile) ? null : latestSourceFile.dataSourceDate,
+    sourceDates,
     employees
   })
 }

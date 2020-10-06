@@ -1,6 +1,5 @@
-import moment from 'moment'
 import React, { useState } from 'react'
-import { Alert, Button, DatePicker, Table, Row, Col, Space, Layout } from 'antd'
+import { Alert, Button, DatePicker, Table, Space, Layout } from 'antd'
 import { CalendarOutlined } from '@ant-design/icons'
 import { useAsyncRun, useAsyncTaskFetch } from 'react-hooks-async'
 import { useHistory, useLocation } from 'react-router-dom'
@@ -96,7 +95,7 @@ const EmployeesAttendancesPage = ({ dataUpdatedTimestamp }) => {
             <div className="data-month-name">งวดเดือน {attendanceMonth.format('MMMM YYYY')}</div>
             <div className="data-month-period">{attendanceMonthPeriodStart.format('D MMMM YYYY')} - {attendanceMonthPeriodEnd.format('D MMMM YYYY')}</div>
           </Space>
-          <Button onClick={handleOnClick} className="change-month-button"><CalendarOutlined /> เปลี่ยนงวด</Button>
+          <Button onClick={handleOnClick} className="change-month-button"><CalendarOutlined /> เลือกเดือน</Button>
           <DatePicker
             picker="month"
             open={datePickerOpen}
@@ -104,7 +103,7 @@ const EmployeesAttendancesPage = ({ dataUpdatedTimestamp }) => {
             onChange={handleMonthChange} />
         </div>
         <div className="dates">
-          <UploadDates />
+          <UploadDates attendanceMonth={attendanceMonth} sourceDates={fetchTask.result ? fetchTask.result.sourceDates : null} />
         </div>
       </div>
     )

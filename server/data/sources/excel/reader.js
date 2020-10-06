@@ -1,12 +1,11 @@
 import _ from 'lodash'
-import moment from 'moment'
 import XLSX from 'xlsx'
 import { generateColumnRange, parseDate, parseInteger, readCellValue, readColumnsData } from './utils'
 import { parseDuration } from '../../../utils/date'
 
 class ExcelReader {
   constructor(filePath) {
-    this.workbook = XLSX.readFile(filePath)
+    this.workbook = XLSX.readFile(filePath, { type: 'file' })
   }
 
   /**

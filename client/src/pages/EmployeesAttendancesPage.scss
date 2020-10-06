@@ -11,6 +11,7 @@
 
       .data-month {
         margin-left: 7px;
+        vertical-align: middle;
 
         .data-month-name {
           font-size: 1.2rem;
@@ -24,25 +25,16 @@
       }
 
       .ant-btn.change-month-button {
-        background-color: #EEE;
+        background-color: #fff;
         border-color: #bfbfbf;
-        margin-left: 15px;
+        margin-left: 30px;
         padding: 5px 15px 4px;
         border-radius: 5px;
-      }
-
-      .table-title-right {
-        padding-right: 7px;
-        text-align: right;
-      }
-
-      .data-latest-date {
-        color: #666;
-        margin-right: 5px;
+        vertical-align: middle;
       }
 
       .upload-dates-component {
-        margin: 8px 0 8px 8px;
+        margin: 10px 0 8px 8px;
       }
     }
 

@@ -1,6 +1,7 @@
 client/build
 *.xlsx
 *.sqlite
+resources
 
 # Logs
 logs

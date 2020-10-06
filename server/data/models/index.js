@@ -20,7 +20,7 @@ export const initDatabase = async () => {
   // Source File
   SourceFile.init({
     originalFilename: { type: DataTypes.STRING },
-    dataSourceDate: { type: DataTypes.DATEONLY },
+    dataSourceDate: { type: DataTypes.DATEONLY, unique: true },
     filePath: { type: DataTypes.STRING },
     uploadedDatetime: { type: DataTypes.DATE }
   }, {

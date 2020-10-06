@@ -105,6 +105,6 @@ export const processDailySourceFile = async (sourceFile) => {
 }
 
 export const processMonthlySourceFile = async (sourceFile, fromDate, toDate) => {
-  // TODO : How to accept sourceFile, is it a list of file or single file
-  // TODO => Then how to store it => store multiplre SourceFile row but point to the same file
+  const reader = new ExcelReader(sourceFile.filePath)
+  await _processData(reader, fromDate, toDate)
 }
