@@ -35,3 +35,29 @@ export const getAttendanceMonthString = (date) => {
     return `${_.padStart((date.month() + 1).toString(10), 2, '0')}-${date.year()}`
   }
 }
+
+/**
+ *
+ * @param attendanceMonthString: String => Attendance month in string e.g. 2020-10-01
+ */
+export const getAttendanceMonthPeriod = (attendanceMonthString) => {
+  const attendanceMonth = moment.utc(attendanceMonthString, 'YYYY-MM-DD')
+  return [
+    attendanceMonth.clone().subtract(1, 'months').date(26),
+    attendanceMonth.clone().date(25)
+  ]
+}
+
+/*
+export const monthPeriod = (attendanceMonth) => {
+  try {
+    return [
+      attendanceMonth.clone().subtract(1, 'months').date(26),
+      attendanceMonth.clone().date(25)
+    ]
+  } catch (err) {
+    return null
+  }
+}
+
+ */

@@ -1,0 +1,24 @@
+.payroll-page {
+  .payroll-table {
+    .data-month {
+      font-size: 0.95rem;
+      font-weight: bold;
+    }
+
+    .data-month-period {
+      color: #777;
+      font-size: 0.85rem;
+    }
+
+    .downloads {
+    }
+
+    .downloads.-available {
+      .ant-btn {
+        background-color: #F4F4F4;
+        border-radius: 4px;
+        margin-right: 6px;
+      }
+    }
+  }
+}

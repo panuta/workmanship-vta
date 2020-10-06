@@ -7,10 +7,9 @@ import http from 'http'
 import morgan from 'morgan'
 import path from 'path'
 import fileUpload from 'express-fileupload'
-import { Router as AsyncRouter } from '@awaitjs/express'
 
 import apiRoutes from './routes/api'
-import settingsApiRoutes from './routes/settingsApi'
+import downloadRoutes from './routes/download'
 
 import { initConfig, config as appConfig } from './config'
 import { initLogger, log } from './log'
@@ -33,11 +32,9 @@ export default init()
     app.use(cookieParser())
     app.use(fileUpload({}))
 
-    const apiRouter = new AsyncRouter()
-    apiRouter.use(apiRoutes)
-    apiRouter.use(settingsApiRoutes)
+    app.use('/api', apiRoutes)
+    app.use('/download', downloadRoutes)
 
-    app.use('/api', apiRouter)
     app.use(express.static(path.join(__dirname, 'static')))
 
     if (process.env.NODE_ENV !== 'production') {

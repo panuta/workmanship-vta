@@ -33,9 +33,9 @@ export const findAttendanceMonth = (date) => {
   if(momentObject === null) return null
 
   if(date.date() >= 26) {
-    return momentObject.add(1, 'months').date(1)
+    return momentObject.add(1, 'months').date(1).startOf('day')
   }
-  return momentObject.date(1)
+  return momentObject.date(1).startOf('day')
 }
 
 /**
