@@ -113,8 +113,11 @@ export const processMonthlySourceFile = async (sourceFile, fromDate, toDate) => 
   const reader = new ExcelReader(sourceFile.filePath)
   await _processData(reader, fromDate, toDate)
 
-  // TODO => It's possible to have 2 attendance months
+  const fromAttendanceMonth = findAttendanceMonth(fromDate)
+  const toAttendanceMonth = findAttendanceMonth(toDate)
 
-  const attendanceMonth = findAttendanceMonth(dataSourceDate)
-  await generatePayrollFiles(attendanceMonth)
+  await generatePayrollFiles(fromAttendanceMonth)
+  if(!fromAttendanceMonth.isSame(toAttendanceMonth, 'month')) {
+    await generatePayrollFiles(toAttendanceMonth)
+  }
 }

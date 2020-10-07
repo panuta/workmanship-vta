@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { createCsvFile } from '../../utils/csv'
 
-const PAYROLL_FILE_TEMP_PATH = path.resolve(__dirname, '../../../resources/payroll/temp')
+const PAYROLL_FILE_TEMP_PATH = path.resolve(__dirname, '../../resources/payroll/temp')
 
 const _generateTempFilePath = () => {
   fs.mkdirSync(PAYROLL_FILE_TEMP_PATH, { recursive: true })

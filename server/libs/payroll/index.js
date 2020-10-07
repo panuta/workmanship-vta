@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import { generateAttendancePayrollFile, generateIncomePayrollFile } from './generators'
 
-export const PAYROLL_FILE_STORAGE_PATH = path.resolve(__dirname, '../../../resources/payroll/files')
+export const PAYROLL_FILE_STORAGE_PATH = path.resolve(__dirname, '../../resources/payroll/files')
 
 export const VALID_FILE_TYPES = [
   'attendance',

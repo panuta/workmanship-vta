@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import moment from 'moment'
 import path from 'path'
 import XLSX from 'xlsx'
 import { v4 as uuidv4 } from 'uuid'
@@ -26,9 +25,8 @@ export const _storeFileAtTemporaryLocation = async (file) => {
 export const _generateUploadFilename = (dataSourceDate) => {
   if(_.isArray(dataSourceDate)) {
     return `VTA-${dataSourceDate[0].format('YYYY-MM-DD')}--${dataSourceDate[1].format('YYYY-MM-DD')}`
-  } else {
-    return `VTA-${dataSourceDate.format('YYYY-MM-DD')}`
   }
+  return `VTA-${dataSourceDate.format('YYYY-MM-DD')}`
 }
 
 export const uploadExcelFile = async (dataSourceDate, file) => {
