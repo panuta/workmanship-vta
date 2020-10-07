@@ -44,3 +44,21 @@ export const dateToString = date => {
   if(momentObject !== null) return momentObject.format('YYYY-MM-DD')
   return null
 }
+
+/**
+ * Generate dates within a month
+ *
+ * @param month: Moment object
+ * @return Array of Moment object
+ */
+export const generateMonthlyDate = (month) => {
+  const startOfMonth = month.clone().startOf('month').startOf('day')
+  const endOfMonth = startOfMonth.clone().endOf('month')
+
+  const dates = []
+  while(startOfMonth.isSameOrBefore(endOfMonth)) {
+    dates.push(startOfMonth.clone())
+    startOfMonth.add(1, 'day')
+  }
+  return dates
+}

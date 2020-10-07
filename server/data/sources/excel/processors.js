@@ -5,6 +5,8 @@ import ExcelReader from './reader'
 import { Employee, EmployeeAttendance, Shift } from '../../models'
 import { getEmployees } from '../../functions/employee'
 import { toMomentObject } from '../../../utils/date'
+import { findAttendanceMonth } from '../../../utils/attendanceMonth'
+import { generatePayrollFiles } from '../../../libs/payroll'
 
 /**
  * Read employees' attendances data from Excel file and store it to database
@@ -102,9 +104,17 @@ export const processDailySourceFile = async (sourceFile) => {
   const reader = new ExcelReader(sourceFile.filePath)
   const dataSourceDate = toMomentObject(sourceFile.dataSourceDate)
   await _processData(reader, dataSourceDate, dataSourceDate)
+
+  const attendanceMonth = findAttendanceMonth(dataSourceDate)
+  await generatePayrollFiles(attendanceMonth)
 }
 
 export const processMonthlySourceFile = async (sourceFile, fromDate, toDate) => {
   const reader = new ExcelReader(sourceFile.filePath)
   await _processData(reader, fromDate, toDate)
+
+  // TODO => It's possible to have 2 attendance months
+
+  const attendanceMonth = findAttendanceMonth(dataSourceDate)
+  await generatePayrollFiles(attendanceMonth)
 }

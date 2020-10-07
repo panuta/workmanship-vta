@@ -47,17 +47,3 @@ export const getAttendanceMonthPeriod = (attendanceMonthString) => {
     attendanceMonth.clone().date(25)
   ]
 }
-
-/*
-export const monthPeriod = (attendanceMonth) => {
-  try {
-    return [
-      attendanceMonth.clone().subtract(1, 'months').date(26),
-      attendanceMonth.clone().date(25)
-    ]
-  } catch (err) {
-    return null
-  }
-}
-
- */

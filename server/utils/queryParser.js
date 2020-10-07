@@ -18,7 +18,7 @@ export const parseDateQueryParameter = (queryParameters, parameterName) => {
 }
 
 /**
- * Parse "month=MM-YYYY" from query parameter. MM is one-indexed (January is 01)
+ * Parse "month=MM-YYYY" from query parameter. MM is 1-indexed (January is 01)
  *
  * @param requestQuery: Object
  * @returns {moment.Moment}

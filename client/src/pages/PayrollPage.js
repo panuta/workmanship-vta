@@ -1,13 +1,13 @@
 import React from 'react'
 import moment from 'moment'
 import { Link } from 'react-router-dom'
-import { Layout, Space, Table } from 'antd'
-import { DownloadOutlined } from '@ant-design/icons'
+import { useAsyncRun, useAsyncTaskFetch } from 'react-hooks-async'
+import { Alert, Layout, Space, Table } from 'antd'
+import { DownloadOutlined, WarningOutlined } from '@ant-design/icons'
 
-import { getAttendanceMonthPeriod } from '../libs/attendanceMonth'
+import { getAttendanceMonthPeriod, getAttendanceMonthString } from '../libs/attendanceMonth'
 
 import './PayrollPage.scss'
-import { useAsyncRun, useAsyncTaskFetch } from 'react-hooks-async'
 
 const { Content } = Layout
 
@@ -24,17 +24,23 @@ const TABLE_COLUMNS = [
     }
   },
   { title: 'ดาวน์โหลดไฟล์', dataIndex: 'files', align: 'left',
-    render: (text, record, index) => (
-      <Space className="downloads -available">
-        <Link className="ant-btn" to="/download?file=attendance&month=" target="_blank" download><DownloadOutlined /> ไฟล์ข้อมูลเวลาทำงาน</Link>
-      </Space>
-    )
+    render: (text, record, index) => {
+      const attendanceMonthString = getAttendanceMonthString(moment.utc(record.attendanceMonth))
+      if(record.status === 'available' || record.status === 'incomplete') {
+        return (
+          <Space className="payroll-downloads">
+            <Link className="ant-btn" to={`/download/payroll?file=attendance&month=${attendanceMonthString}`} target="_blank" download><DownloadOutlined /> ไฟล์ข้อมูลเวลาทำงาน</Link>
+            <Link className="ant-btn" to={`/download/payroll?file=income&month=${attendanceMonthString}`} target="_blank" download><DownloadOutlined /> ไฟล์รายได้-เบี้ยเลี้ยง</Link>
+            { record.status === 'incomplete' ? <span className="downloads-incomplete"><WarningOutlined /> ยังมีข้อมูลไม่ครบเดือน</span> : ''}
+          </Space>
+        )
+      } else {
+        return (
+          <div className="downloads -unknown">ไม่มีไฟล์ข้อมูล</div>
+        )
+      }
+    }
   }
-]
-
-const RESULT = [
-  { attendanceMonth: '2020-10-01', status: 'available', files: { payroll: 'file1', another: 'file2' } },
-  { attendanceMonth: '2020-09-01', status: 'incomplete', files: { payroll: 'file1', another: 'file2' } },
 ]
 
 function PayrollPage() {
@@ -42,17 +48,41 @@ function PayrollPage() {
   const fetchTask = useAsyncTaskFetch(fetchUrl)
   useAsyncRun(fetchTask)
 
+  const renderErrorState = (errorMessage) => {
+    return <Alert message='Error occurred while loading data' description={errorMessage} type='error' showIcon />
+  }
+
+  const renderLoadingState = () => {
+    return <Table
+      bordered
+      loading
+      columns={TABLE_COLUMNS}
+      pagination={false}
+      scroll={{x: "100%"}}
+      className="payroll-table"
+    />
+  }
+
+  const renderSuccessState = () => {
+    return (
+      <Table
+        bordered
+        columns={TABLE_COLUMNS}
+        dataSource={fetchTask.result.payrollFiles}
+        pagination={false}
+        scroll={{x: "100%"}}
+        className="payroll-table"
+      />
+    )
+  }
+
   return (
     <Content className="payroll-page">
       <div className="site-layout-content">
-        <Table
-          bordered
-          columns={TABLE_COLUMNS}
-          dataSource={RESULT}
-          pagination={false}
-          scroll={{x: "100%"}}
-          className="payroll-table"
-        />
+        {fetchTask.aborted && renderErrorState('Fetching aborted')}
+        {fetchTask.error && renderErrorState(fetchTask.error)}
+        {fetchTask.pending && renderLoadingState()}
+        {fetchTask.result && renderSuccessState()}
       </div>
     </Content>
   )

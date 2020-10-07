@@ -10,15 +10,20 @@
       font-size: 0.85rem;
     }
 
-    .downloads {
-    }
-
-    .downloads.-available {
+    .payroll-downloads {
       .ant-btn {
         background-color: #F4F4F4;
         border-radius: 4px;
         margin-right: 6px;
       }
+
+      .downloads-incomplete {
+        background-color: #ffe7ba;
+        display: inline-block;
+        padding: 1px 8px;
+      }
     }
+
+
   }
 }

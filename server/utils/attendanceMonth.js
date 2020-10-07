@@ -50,3 +50,15 @@ export const inAttendanceMonth = (date, attendanceMonth) => {
   const [start, end] = monthPeriod(attendanceMonth)
   return momentObject.isBetween(start, end, 'day', '[]')
 }
+
+
+export const attendanceMonthDates = (attendanceMonth) => {
+  const [startPeriod, endPeriod] = monthPeriod(attendanceMonth)
+
+  const dates = []
+  while(startPeriod.isSameOrBefore(endPeriod)) {
+    dates.push(startPeriod.clone())
+    startPeriod.add(1, 'day')
+  }
+  return dates
+}

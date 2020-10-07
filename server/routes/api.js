@@ -6,11 +6,8 @@ const router = Router()
 
 router.postAsync('/uploadDailyFile', uploadDailyFile)
 router.postAsync('/uploadMonthlyFile', uploadMonthlyFile)
-
 router.getAsync('/employeesAttendances', employeesAttendancesPage)
-
 router.getAsync('/listPayrollFiles', listPayrollFiles)
-
 router.postAsync('/deleteEverything', deleteEverything)
 
 export default router
