@@ -1,5 +1,5 @@
 import { parseMonthYearQueryParameter } from '../utils/queryParser'
-import { getOrCreatePayrollFile, sanitizeFileType } from '../libs/payroll'
+import { getOrCreatePayrollFile, sanitizeFileType } from '../functions/payroll'
 import { NotFoundError } from '../errors'
 
 export const downloadPayrollFile = async (req, res, next) => {

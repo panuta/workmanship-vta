@@ -1,6 +1,6 @@
 import Config from '../../../../server/config'
 import { initDatabase, dropDatabase, SourceFile } from '../../../../server/data/models'
-import { getLatestSourceFile } from '../../../../server/data/functions/sourceFile'
+import { getLatestSourceFile } from '../../../../server/functions/sourceFile'
 
 jest.mock('../../../../server/config')
 

@@ -58,8 +58,8 @@ export const generatePayrollFiles = async (attendanceMonth) => {
   _swapTempFileToPayrollFile(tempAttendancePayrollFilePath, attendanceMonth, 'attendance')
 
   // Generate income file
-  const tempIncomePayrollFilePath = await generateIncomePayrollFile(attendanceMonth)
-  _swapTempFileToPayrollFile(tempIncomePayrollFilePath, attendanceMonth, 'income')
+  // const tempIncomePayrollFilePath = await generateIncomePayrollFile(attendanceMonth)
+  // _swapTempFileToPayrollFile(tempIncomePayrollFilePath, attendanceMonth, 'income')
 }
 
 /**

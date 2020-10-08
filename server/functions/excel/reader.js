@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import XLSX from 'xlsx'
 import { generateColumnRange, parseDate, parseInteger, readCellValue, readColumnsData } from './utils'
-import { parseDuration } from '../../../utils/date'
+import { parseDuration } from '../../utils/date'
 
 class ExcelReader {
   constructor(filePath) {

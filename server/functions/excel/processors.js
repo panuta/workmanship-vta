@@ -2,11 +2,9 @@ import _ from 'lodash'
 import { Op } from 'sequelize'
 
 import ExcelReader from './reader'
-import { Employee, EmployeeAttendance, Shift } from '../../models'
-import { getEmployees } from '../../functions/employee'
-import { toMomentObject } from '../../../utils/date'
-import { findAttendanceMonth } from '../../../utils/attendanceMonth'
-import { generatePayrollFiles } from '../../../libs/payroll'
+import { Employee, EmployeeAttendance, Shift } from '../../data/models'
+import { getEmployees } from '../employee'
+import { toMomentObject } from '../../utils/date'
 
 /**
  * Read employees' attendances data from Excel file and store it to database
@@ -104,20 +102,9 @@ export const processDailySourceFile = async (sourceFile) => {
   const reader = new ExcelReader(sourceFile.filePath)
   const dataSourceDate = toMomentObject(sourceFile.dataSourceDate)
   await _processData(reader, dataSourceDate, dataSourceDate)
-
-  const attendanceMonth = findAttendanceMonth(dataSourceDate)
-  await generatePayrollFiles(attendanceMonth)
 }
 
 export const processMonthlySourceFile = async (sourceFile, fromDate, toDate) => {
   const reader = new ExcelReader(sourceFile.filePath)
   await _processData(reader, fromDate, toDate)
-
-  const fromAttendanceMonth = findAttendanceMonth(fromDate)
-  const toAttendanceMonth = findAttendanceMonth(toDate)
-
-  await generatePayrollFiles(fromAttendanceMonth)
-  if(!fromAttendanceMonth.isSame(toAttendanceMonth, 'month')) {
-    await generatePayrollFiles(toAttendanceMonth)
-  }
 }

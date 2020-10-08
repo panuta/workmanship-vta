@@ -3,12 +3,12 @@ import { initDatabase, EmployeeAttendance, closeDatabase, Employee } from '../..
 import {
   getAnnualEmployeesAttendances,
   getMonthlyEmployeesAttendances
-} from '../../../../server/data/functions/employeeAttendance'
-import { getEmployees } from '../../../../server/data/functions/employee'
+} from '../../../../server/functions/employeeAttendance'
+import { getEmployees } from '../../../../server/functions/employee'
 import { toMomentObject } from '../../../../server/utils/date'
 
 jest.mock('../../../../server/config')
-jest.mock('../../../../server/data/functions/employee')
+jest.mock('../../../../server/functions/employee')
 
 describe('Employee Attendance functions', () => {
   beforeAll(async () => {

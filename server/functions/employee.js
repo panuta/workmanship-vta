@@ -1,7 +1,7 @@
 import { Op } from 'sequelize'
-import { Employee } from '../models'
-import { monthPeriod } from '../../utils/attendanceMonth'
-import { dateToString } from '../../utils/date'
+import { Employee } from '../data/models'
+import { monthPeriod } from '../utils/attendanceMonth'
+import { dateToString } from '../utils/date'
 
 export const getEmployees = async (attendanceMonth) => {
   if(attendanceMonth !== undefined) {

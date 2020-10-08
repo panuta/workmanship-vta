@@ -4,8 +4,8 @@ import XLSX from 'xlsx'
 import { v4 as uuidv4 } from 'uuid'
 import { promises as fs } from 'fs'
 
-const TEMP_UPLOAD_PATH = path.resolve(__dirname, '../../../resources/temp/')
-const UPLOAD_PATH = path.resolve(__dirname, '../../../resources/')
+const TEMP_UPLOAD_PATH = path.resolve(__dirname, '../../resources/temp/')
+const UPLOAD_PATH = path.resolve(__dirname, '../../resources/')
 
 export const _getFileExtension = (file) => {
   const filename = file.name

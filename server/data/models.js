@@ -1,7 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import { Sequelize, DataTypes, Model } from 'sequelize'
 
-import { config as appConfig } from '../../config'
+import { config as appConfig } from '../config'
 
 export class SourceFile extends Model {}
 export class Shift extends Model {}

@@ -2,7 +2,7 @@ import moment from 'moment'
 
 import Config from '../../../../server/config'
 import { initDatabase, dropDatabase, Employee } from '../../../../server/data/models'
-import { getEmployees } from '../../../../server/data/functions/employee'
+import { getEmployees } from '../../../../server/functions/employee'
 
 jest.mock('../../../../server/config')
 

@@ -1,5 +1,5 @@
 import path from 'path'
-import ExcelReader from '../../../../../server/data/sources/excel/reader'
+import ExcelReader from '../../../../../server/functions/excel/reader'
 
 describe('ExcelReader', () => {
   const excelReader = new ExcelReader(path.resolve(__dirname, '../../../resources/input-template.xlsx'))

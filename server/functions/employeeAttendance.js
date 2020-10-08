@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import { Op } from 'sequelize'
-import { EmployeeAttendance } from '../models'
+import { EmployeeAttendance } from '../data/models'
 import { getEmployees } from './employee'
-import { annualPeriod, inAttendanceMonth } from '../../utils/attendanceMonth'
+import { annualPeriod, inAttendanceMonth } from '../utils/attendanceMonth'
 
 export const getAnnualEmployeesAttendances = async (attendanceMonth, activeEmployeeCodes) => {
   const [startAnnualPeriod, endAnnualPeriod] = annualPeriod(attendanceMonth)
