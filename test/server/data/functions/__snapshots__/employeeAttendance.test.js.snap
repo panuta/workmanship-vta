@@ -1,5 +1,76 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Employee Attendance functions calculateEmployeeAttendances function should run 1`] = `
+Array [
+  Object {
+    "attendanceDate": "2019-12-26",
+    "code": "1001",
+    "compensation": 0,
+    "id": 2,
+    "minutesEarlyLeave": 0,
+    "minutesLate": 0,
+    "notice": 0,
+    "overtime": 0,
+    "shift": "A",
+  },
+  Object {
+    "attendanceDate": "2020-01-25",
+    "code": "1001",
+    "compensation": 0,
+    "id": 3,
+    "minutesEarlyLeave": 0,
+    "minutesLate": 0,
+    "notice": 0,
+    "overtime": 0,
+    "shift": "A",
+  },
+  Object {
+    "attendanceDate": "2020-01-26",
+    "code": "1001",
+    "compensation": 0,
+    "id": 4,
+    "minutesEarlyLeave": 0,
+    "minutesLate": 0,
+    "notice": 0,
+    "overtime": 0,
+    "shift": "A",
+  },
+  Object {
+    "attendanceDate": "2020-12-25",
+    "code": "1001",
+    "compensation": 0,
+    "id": 5,
+    "minutesEarlyLeave": 0,
+    "minutesLate": 0,
+    "notice": 0,
+    "overtime": 0,
+    "shift": "A",
+  },
+  Object {
+    "attendanceDate": "2020-01-25",
+    "code": "1003",
+    "compensation": 0,
+    "id": 9,
+    "minutesEarlyLeave": 0,
+    "minutesLate": 0,
+    "notice": 0,
+    "overtime": 0,
+    "shift": "A",
+  },
+  Object {
+    "attendanceDate": "2020-01-26",
+    "code": "1003",
+    "compensation": 0,
+    "id": 10,
+    "minutesEarlyLeave": 0,
+    "minutesLate": 0,
+    "notice": 0,
+    "overtime": 0,
+    "shift": "A",
+  },
+]
+`;
+
 exports[`Employee Attendance functions getAnnualEmployeesAttendances function should return attendances within a year for active employees 1`] = `
 Array [
   Object {

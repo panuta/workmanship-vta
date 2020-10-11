@@ -4,13 +4,18 @@ import moment from 'moment'
 import { config as appConfig } from '../config'
 import { InvalidRequestError, MissingAttributesError } from '../errors'
 import { Employee, EmployeeAttendance, Shift, SourceFile } from '../data/models'
-import { getMonthlyEmployeesAttendances } from '../functions/employeeAttendance'
+import { calculateEmployeeAttendances } from '../functions/attendance'
 import { getMonthlySourceFiles, hasSourceFileByDate, upsertSourceFile } from '../functions/sourceFile'
 import { uploadExcelFile } from '../functions/excel/uploader'
 import { processDailySourceFile, processMonthlySourceFile } from '../functions/excel/processors'
 import { generatePayrollFiles } from '../functions/payroll'
 import { attendanceMonthDates, findAttendanceMonth } from '../utils/attendanceMonth'
 import { parseDateQueryParameter, parseMonthYearQueryParameter } from '../utils/queryParser'
+import {
+  increaseByValueOnAttendanceMonth,
+  increaseByValueUntilAttendanceMonth,
+  increaseWhenShiftMatchedUntilAttendanceMonth
+} from '../functions/attendance/calculators'
 
 export const uploadDailyFile = async (req, res, next) => {
   if (!req.files || Object.keys(req.files).length === 0) {
@@ -88,7 +93,63 @@ export const uploadMonthlyFile = async (req, res, next) => {
 export const employeesAttendancesPage = async (req, res, next) => {
   const attendanceMonth = parseMonthYearQueryParameter(req.query)
 
-  const employees = await getMonthlyEmployeesAttendances(attendanceMonth)
+  const employeesAttendances = await calculateEmployeeAttendances(attendanceMonth, [
+    {
+      resultKey: 'notice',
+      fn: increaseByValueUntilAttendanceMonth,
+      args: [ 'notice' ]
+    }, {
+      resultKey: 'vacation',
+      fn: increaseWhenShiftMatchedUntilAttendanceMonth,
+      args: [ ['พักร้อน'] ]
+    }, {
+      resultKey: 'sickLeave',
+      fn: increaseWhenShiftMatchedUntilAttendanceMonth,
+      args: [ ['ลาป่วย'] ]
+    }, {
+      resultKey: 'casualLeave',
+      fn: increaseWhenShiftMatchedUntilAttendanceMonth,
+      args: [ ['ลากิจ'] ]
+    }, {
+      resultKey: 'compensation',
+      fn: increaseByValueUntilAttendanceMonth,
+      args: [ 'compensation' ]
+    }, {
+      resultKey: 'minutesLate',
+      fn: increaseByValueOnAttendanceMonth,
+      args: [ 'minutesLate' ]
+    }, {
+      resultKey: 'minutesEarlyLeave',
+      fn: increaseByValueOnAttendanceMonth,
+      args: [ 'minutesEarlyLeave' ]
+    }, {
+      resultKey: 'noShow',
+      fn: increaseWhenShiftMatchedUntilAttendanceMonth,
+      args: [ ['ขาด'] ]
+    }
+  ])
+
+  const employees = employeesAttendances.map(employeeAttendances => {
+    const employeeDict = employeeAttendances.employee.toJSON()
+
+    /**
+     * Calculate Diligence Allowance (Monthly)
+     * - No casualLeave
+     * - No sickLeave
+     * - No minutesLate
+     * - No notice
+     */
+    const diligenceAllowance =
+      employeeAttendances.casualLeave > 0 ||
+      employeeAttendances.sickLeave > 0 ||
+      employeeAttendances.minutesLate > 0 ||
+      employeeAttendances.notice > 0
+        ? -1 : 0
+
+    return Object.assign(employeeDict, _.omit(employeeAttendances, ['employee']), {
+      diligenceAllowance
+    })
+  })
 
   const sourceFiles = await getMonthlySourceFiles(attendanceMonth)
   const sourceDates = sourceFiles.map(sourceFile => sourceFile.dataSourceDate)

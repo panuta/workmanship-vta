@@ -7,6 +7,7 @@ export const monthPeriod = (attendanceMonth) => {
       attendanceMonth.clone().date(25)
     ]
   } catch (err) {
+    console.log(err)
     return null
   }
 }
@@ -43,7 +44,7 @@ export const findAttendanceMonth = (date) => {
  * @param date: Date or moment.Moment or String
  * @param attendanceMonth
  */
-export const inAttendanceMonth = (date, attendanceMonth) => {
+export const sameAttendanceMonth = (date, attendanceMonth) => {
   const momentObject = toMomentObject(date)
   if(momentObject === null) return false
 
@@ -51,6 +52,13 @@ export const inAttendanceMonth = (date, attendanceMonth) => {
   return momentObject.isBetween(start, end, 'day', '[]')
 }
 
+export const isUntilAttendanceMonth = (date, attendanceMonth) => {
+  const momentObject = toMomentObject(date)
+  if(momentObject === null) return false
+
+  const [, end] = monthPeriod(attendanceMonth)
+  return momentObject.isSameOrBefore(end)
+}
 
 export const attendanceMonthDates = (attendanceMonth) => {
   const [startPeriod, endPeriod] = monthPeriod(attendanceMonth)
