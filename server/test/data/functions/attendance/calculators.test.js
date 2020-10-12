@@ -96,7 +96,7 @@ describe('Attendance calculators', () => {
       const attendances = [
         { attendanceDate: utcDate(2020, 7, 25), shift: 'A' },
         { attendanceDate: utcDate(2020, 7, 26), shift: 'A' },
-        { attendanceDate: utcDate(2020, 8, 1), shift: 'B' },                        v
+        { attendanceDate: utcDate(2020, 8, 1), shift: 'B' },
         { attendanceDate: utcDate(2020, 8, 2), shift: 'D' },
         { attendanceDate: utcDate(2020, 8, 3), shift: 'C' },
         { attendanceDate: utcDate(2020, 8, 25), shift: 'A' },
