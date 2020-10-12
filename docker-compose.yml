@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  webserver:
+    build:
+      context: .
+    volumes:
+      - ./.storage:/usr/src/.storage
+    ports:
+      - 80:3000
+    environment:
+      ENVIRONMENT: production

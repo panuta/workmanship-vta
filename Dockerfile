@@ -20,9 +20,9 @@ WORKDIR /usr/src/server
 
 RUN chown -R root:root .
 
-COPY server ./server
-COPY .babelrc ./
-COPY package.json ./
+COPY server/src ./src
+COPY server/.babelrc ./
+COPY server/package.json ./
 
 RUN npm install
 RUN npm run build
@@ -32,14 +32,14 @@ RUN npm run build
 FROM node:14-stretch-slim
 USER root
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+RUN mkdir -p /usr/app
+WORKDIR /usr/app
 
 # Copy server files
 COPY --from=build /usr/src/server/dist ./dist
 
 # Copy client files
-RUN mkdir -p /usr/src/app/dist/static/client
+RUN mkdir -p /usr/app/dist/static/client
 COPY --from=build /usr/src/client/build ./dist/static/client/
 
 COPY package.json .
@@ -56,4 +56,4 @@ ENV NODE_ENV production
 EXPOSE 3000
 
 USER appuser
-CMD [ "/usr/src/app/entrypoint.sh"]
+CMD [ "/usr/app/entrypoint.sh"]

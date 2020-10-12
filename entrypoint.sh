@@ -1,3 +1,3 @@
 #!/bin/sh
 
-npm run start
+cd /usr/app/ && npm run start
