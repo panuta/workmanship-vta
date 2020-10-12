@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Employee Attendance functions getEmployeesAttendancesUntilAttendanceMonth function should return from all employees 1`] = `
+Array [
+  Object {
+    "attendanceDate": "2019-12-26",
+    "code": "1001",
+    "compensation": 0,
+    "id": 2,
+    "minutesEarlyLeave": 0,
+    "minutesLate": 0,
+    "notice": 0,
+    "overtime": 0,
+    "shift": "A",
+  },
+  Object {
+    "attendanceDate": "2020-09-25",
+    "code": "1001",
+    "compensation": 0,
+    "id": 3,
+    "minutesEarlyLeave": 0,
+    "minutesLate": 0,
+    "notice": 0,
+    "overtime": 0,
+    "shift": "A",
+  },
+  Object {
+    "attendanceDate": "2019-12-26",
+    "code": "1002",
+    "compensation": 0,
+    "id": 8,
+    "minutesEarlyLeave": 0,
+    "minutesLate": 0,
+    "notice": 0,
+    "overtime": 0,
+    "shift": "A",
+  },
+  Object {
+    "attendanceDate": "2020-09-25",
+    "code": "1002",
+    "compensation": 0,
+    "id": 9,
+    "minutesEarlyLeave": 0,
+    "minutesLate": 0,
+    "notice": 0,
+    "overtime": 0,
+    "shift": "A",
+  },
+  Object {
+    "attendanceDate": "2019-12-26",
+    "code": "1004",
+    "compensation": 0,
+    "id": 15,
+    "minutesEarlyLeave": 0,
+    "minutesLate": 0,
+    "notice": 0,
+    "overtime": 0,
+    "shift": "A",
+  },
+]
+`;
+
+exports[`Employee Attendance functions getEmployeesAttendancesUntilAttendanceMonth function should return from selected employees 1`] = `
+Array [
+  Object {
+    "attendanceDate": "2019-12-26",
+    "code": "1001",
+    "compensation": 0,
+    "id": 18,
+    "minutesEarlyLeave": 0,
+    "minutesLate": 0,
+    "notice": 0,
+    "overtime": 0,
+    "shift": "A",
+  },
+  Object {
+    "attendanceDate": "2020-09-25",
+    "code": "1001",
+    "compensation": 0,
+    "id": 19,
+    "minutesEarlyLeave": 0,
+    "minutesLate": 0,
+    "notice": 0,
+    "overtime": 0,
+    "shift": "A",
+  },
+]
+`;

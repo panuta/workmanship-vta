@@ -1,6 +1,10 @@
 import _ from 'lodash'
 import moment from 'moment'
 
+export const utcDate = (year, month, date) => {
+  return new Date(Date.UTC(year, month, date))
+}
+
 export const parseDuration = (text, delimiter) => {
   let hoursText
   let minutesText

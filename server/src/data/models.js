@@ -2,7 +2,6 @@
 import { Sequelize, DataTypes, Model } from 'sequelize'
 
 import { config as appConfig } from '../config'
-import { USER_STORAGE_PATH } from '../config/storage'
 
 export class SourceFile extends Model {}
 export class Shift extends Model {}
@@ -12,11 +11,9 @@ export class EmployeeAttendance extends Model {}
 export let databaseConnection
 
 export const initDatabase = async () => {
-  const databaseStoragePath = `${USER_STORAGE_PATH}/database.sqlite`
-
   databaseConnection = new Sequelize({
     dialect: 'sqlite',
-    storage: databaseStoragePath,
+    storage: appConfig.databaseStorage,
     logging: false
   })
 

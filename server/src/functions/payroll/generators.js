@@ -8,7 +8,7 @@ import { calculateEmployeeAttendances } from '../attendance'
 import {
   increaseByValueOnAttendanceMonth,
   increaseWhenShiftMatchedOnAttendanceMonth,
-  increaseWhenShiftMatchedUntilAttendanceMonth,
+  increaseWhenShiftMatched,
   increaseWhenShiftNotMatchedOnAttendanceMonth,
 } from '../attendance/calculators'
 
@@ -82,7 +82,7 @@ export const generateAttendancePayrollFile = async (attendanceMonth) => {
       args: [ 'overtime' ]
     }, {
       resultKey: 'annualCasualLeave',
-      fn: increaseWhenShiftMatchedUntilAttendanceMonth,
+      fn: increaseWhenShiftMatched,
       args: [ ['ลากิจ'] ]
     }
   ])

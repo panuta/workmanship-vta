@@ -1,3 +1,5 @@
+import { USER_STORAGE_PATH } from './storage'
+
 let config
 
 export function initConfig() {
@@ -6,6 +8,7 @@ export function initConfig() {
       DEV: false,
       PORT: 3000,
       allowReplaceDailyUpload: false,
+      databaseStorage: `${USER_STORAGE_PATH}/database.sqlite`,
       databaseTimestamps: true
     },
     dev: {

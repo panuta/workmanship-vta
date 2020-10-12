@@ -7,7 +7,6 @@ export const monthPeriod = (attendanceMonth) => {
       attendanceMonth.clone().date(25)
     ]
   } catch (err) {
-    console.log(err)
     return null
   }
 }
@@ -33,10 +32,14 @@ export const findAttendanceMonth = (date) => {
   const momentObject = toMomentObject(date)
   if(momentObject === null) return null
 
-  if(date.date() >= 26) {
+  if(momentObject.date() >= 26) {
     return momentObject.add(1, 'months').date(1).startOf('day')
   }
   return momentObject.date(1).startOf('day')
+}
+
+export const toAttendanceMonth = (year, month) => {
+  return findAttendanceMonth(new Date(Date.UTC(year, month, 1)))
 }
 
 /**

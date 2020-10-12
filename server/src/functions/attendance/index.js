@@ -2,14 +2,15 @@ import _ from 'lodash'
 import { Op } from 'sequelize'
 import { EmployeeAttendance } from '../../data/models'
 import { getEmployees } from '../employee'
-import { annualPeriod } from '../../utils/attendanceMonth'
+import { annualPeriod, monthPeriod } from '../../utils/attendanceMonth'
 
-export const getAnnualEmployeesAttendances = async (attendanceMonth, activeEmployeeCodes) => {
-  const [startAnnualPeriod, endAnnualPeriod] = annualPeriod(attendanceMonth)
+export const getEmployeesAttendancesUntilAttendanceMonth = async (attendanceMonth, activeEmployeeCodes) => {
+  const [startAnnualPeriod, ] = annualPeriod(attendanceMonth)
+  const [, endMonthPeriod] = monthPeriod(attendanceMonth)
 
   const where = {
     attendanceDate: {
-      [Op.between]: [startAnnualPeriod.toDate(), endAnnualPeriod.toDate()]
+      [Op.between]: [startAnnualPeriod.toDate(), endMonthPeriod.toDate()]
     }
   }
   if(activeEmployeeCodes) {
@@ -18,20 +19,15 @@ export const getAnnualEmployeesAttendances = async (attendanceMonth, activeEmplo
   return EmployeeAttendance.findAll({ where })
 }
 
-/*
-calculators = [
-  {
-    resultKey: 'notice',
-    fn: increaseByValueAnnually,
-    args: []
-  }
-]
- */
 export const calculateEmployeeAttendances = async (attendanceMonth, calculators) => {
+  /*
+  calculators => [ { resultKey: String, fn: Function, args: Array of function arguments } ]
+   */
+
   const activeEmployees = await getEmployees(attendanceMonth)
 
   const activeEmployeeCodes = activeEmployees.map(employee => employee.code)
-  const employeesAttendances = await getAnnualEmployeesAttendances(attendanceMonth, activeEmployeeCodes)
+  const employeesAttendances = await getEmployeesAttendancesUntilAttendanceMonth(attendanceMonth, activeEmployeeCodes)
 
   // Convert list of employees to employee mapping
   const employeeMapping = activeEmployees.reduce((accumulator, employee) => {

@@ -1,16 +1,15 @@
-import Config from '../../../../server/config'
-import { initDatabase, EmployeeAttendance, closeDatabase, Employee } from '../../../../server/data/models'
+import Config from '../../../../src/config'
+import { initDatabase, EmployeeAttendance, closeDatabase, Employee } from '../../../../src/data/models'
 import {
-  getAnnualEmployeesAttendances,
   calculateEmployeeAttendances,
-  getMonthlyEmployeesAttendances
-} from '../../../../server/functions/employeeAttendance'
-import { getEmployees } from '../../../../server/functions/employee'
-import { toMomentObject } from '../../../../server/utils/date'
-import { increaseByValueAnnually } from '../../../../server/functions/attendance/calculators'
+  getEmployeesAttendancesUntilAttendanceMonth
+} from '../../../../src/functions/attendance'
+import { getEmployees } from '../../../../src/functions/employee'
+import { toMomentObject } from '../../../../src/utils/date'
+import { increaseByValueUntilAttendanceMonth } from '../../../../src/functions/attendance/calculators'
 
-jest.mock('../../../../server/config')
-jest.mock('../../../../server/functions/employee')
+jest.mock('../../../../src/config')
+jest.mock('../../../../src/functions/employee')
 
 describe('Employee Attendance functions', () => {
   beforeAll(async () => {
@@ -23,30 +22,59 @@ describe('Employee Attendance functions', () => {
 
   afterEach(async () => {
     jest.resetAllMocks()
-    await EmployeeAttendance.destroy({ where: {} })
+    await EmployeeAttendance.destroy({ truncate: true, restartIdentity: true })
   })
 
-  describe('calculateEmployeeAttendances function', () => {
-    it('should run', async () => {
+  afterAll(async () => {
+    await closeDatabase()
+  })
+
+  describe('getEmployeesAttendancesUntilAttendanceMonth function', () => {
+    const setupEmployeesMockData = async () => {
       await EmployeeAttendance.bulkCreate([
         { code: '1001', attendanceDate: new Date(2019, 11, 25), shift: 'A' },
         { code: '1001', attendanceDate: new Date(2019, 11, 26), shift: 'A' },
-        { code: '1001', attendanceDate: new Date(2020, 0, 25), shift: 'A' },
-        { code: '1001', attendanceDate: new Date(2020, 0, 26), shift: 'A' },
+        { code: '1001', attendanceDate: new Date(2020, 8, 25), shift: 'A' },
+        { code: '1001', attendanceDate: new Date(2020, 8, 26), shift: 'A' },
         { code: '1001', attendanceDate: new Date(2020, 11, 25), shift: 'A' },
         { code: '1001', attendanceDate: new Date(2020, 11, 26), shift: 'A' },
-        { code: '1002', attendanceDate: new Date(2020, 0, 25), shift: 'A' },
-        { code: '1002', attendanceDate: new Date(2020, 0, 26), shift: 'A' },
-        { code: '1003', attendanceDate: new Date(2020, 0, 25), shift: 'A' },
-        { code: '1003', attendanceDate: new Date(2020, 0, 26), shift: 'A' },
-      ])
 
-      const attendanceMonth = toMomentObject(new Date(2020, 8, 1))
-      await expect(getAnnualEmployeesAttendances(attendanceMonth, ['1001', '1003'])).resolves.toMatchSnapshot()
+        { code: '1002', attendanceDate: new Date(2019, 11, 25), shift: 'A' },
+        { code: '1002', attendanceDate: new Date(2019, 11, 26), shift: 'A' },
+        { code: '1002', attendanceDate: new Date(2020, 8, 25), shift: 'A' },
+        { code: '1002', attendanceDate: new Date(2020, 8, 26), shift: 'A' },
+        { code: '1002', attendanceDate: new Date(2020, 11, 25), shift: 'A' },
+        { code: '1002', attendanceDate: new Date(2020, 11, 26), shift: 'A' },
+
+        { code: '1003', attendanceDate: new Date(2019, 11, 25), shift: 'A' },
+        { code: '1003', attendanceDate: new Date(2020, 11, 26), shift: 'A' },
+
+        { code: '1004', attendanceDate: new Date(2019, 11, 26), shift: 'A' },
+        { code: '1004', attendanceDate: new Date(2020, 11, 25), shift: 'A' },
+      ])
+    }
+
+    it('should return from all employees', async () => {
+      await setupEmployeesMockData()
+
+      const attendanceMonth = toMomentObject(new Date(Date.UTC(2020, 8, 1)))
+      await expect(
+        getEmployeesAttendancesUntilAttendanceMonth(attendanceMonth)
+      ).resolves.toMatchSnapshot()
+    })
+
+    it('should return from selected employees', async () => {
+      await setupEmployeesMockData()
+
+      const attendanceMonth = toMomentObject(new Date(Date.UTC(2020, 8, 1)))
+      await expect(
+        getEmployeesAttendancesUntilAttendanceMonth(attendanceMonth, ['1001', '1003'])
+      ).resolves.toMatchSnapshot()
     })
   })
 
-  describe('getAnnualEmployeesAttendances function', () => {
+
+  describe('calculateEmployeeAttendances function', () => {
     it('should return attendances within a year for active employees', async () => {
       getEmployees.mockResolvedValue([
         Employee.build({ code: '1001' }),
@@ -100,9 +128,9 @@ describe('Employee Attendance functions', () => {
 
       const attendanceMonth = toMomentObject(new Date(Date.UTC(2020, 8, 1)))
       const values = await calculateEmployeeAttendances(attendanceMonth, [
-        { fn: increaseByValueAnnually, resultKey: 'notice', args: ['notice'] }
+        { fn: increaseByValueUntilAttendanceMonth, resultKey: 'notice', args: ['notice'] }
       ])
-      console.log(values)
+      // console.log(values)
     })
   })
 
@@ -182,7 +210,5 @@ describe('Employee Attendance functions', () => {
   //
   // })
 
-  afterAll(async () => {
-    await closeDatabase()
-  })
+
 })
