@@ -2,6 +2,7 @@ client/build
 *.xlsx
 *.sqlite
 resources
+.storage
 
 # Logs
 logs

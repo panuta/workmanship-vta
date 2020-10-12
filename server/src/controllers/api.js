@@ -12,9 +12,9 @@ import { generatePayrollFiles } from '../functions/payroll'
 import { attendanceMonthDates, findAttendanceMonth } from '../utils/attendanceMonth'
 import { parseDateQueryParameter, parseMonthYearQueryParameter } from '../utils/queryParser'
 import {
+  increaseByValue,
   increaseByValueOnAttendanceMonth,
-  increaseByValueUntilAttendanceMonth,
-  increaseWhenShiftMatchedUntilAttendanceMonth
+  increaseWhenShiftMatched
 } from '../functions/attendance/calculators'
 
 export const uploadDailyFile = async (req, res, next) => {
@@ -96,23 +96,23 @@ export const employeesAttendancesPage = async (req, res, next) => {
   const employeesAttendances = await calculateEmployeeAttendances(attendanceMonth, [
     {
       resultKey: 'notice',
-      fn: increaseByValueUntilAttendanceMonth,
+      fn: increaseByValue,
       args: [ 'notice' ]
     }, {
       resultKey: 'vacation',
-      fn: increaseWhenShiftMatchedUntilAttendanceMonth,
+      fn: increaseWhenShiftMatched,
       args: [ ['พักร้อน'] ]
     }, {
       resultKey: 'sickLeave',
-      fn: increaseWhenShiftMatchedUntilAttendanceMonth,
+      fn: increaseWhenShiftMatched,
       args: [ ['ลาป่วย'] ]
     }, {
       resultKey: 'casualLeave',
-      fn: increaseWhenShiftMatchedUntilAttendanceMonth,
+      fn: increaseWhenShiftMatched,
       args: [ ['ลากิจ'] ]
     }, {
       resultKey: 'compensation',
-      fn: increaseByValueUntilAttendanceMonth,
+      fn: increaseByValue,
       args: [ 'compensation' ]
     }, {
       resultKey: 'minutesLate',
@@ -124,7 +124,7 @@ export const employeesAttendancesPage = async (req, res, next) => {
       args: [ 'minutesEarlyLeave' ]
     }, {
       resultKey: 'noShow',
-      fn: increaseWhenShiftMatchedUntilAttendanceMonth,
+      fn: increaseWhenShiftMatched,
       args: [ ['ขาด'] ]
     }
   ])

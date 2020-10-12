@@ -133,7 +133,8 @@ export const generateAttendancePayrollFile = async (attendanceMonth) => {
   await createCsvFile(
     tempFilePath,
     HEADERS,
-    records
+    records,
+    true
   )
 
   return tempFilePath
