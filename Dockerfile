@@ -42,7 +42,7 @@ COPY --from=build /usr/src/server/dist ./dist
 RUN mkdir -p /usr/app/dist/static/client
 COPY --from=build /usr/src/client/build ./dist/static/client/
 
-COPY package.json .
+COPY ./server/package.json .
 
 RUN npm install --production
 
