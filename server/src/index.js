@@ -48,7 +48,7 @@ export default init()
       const Webpack = require('webpack')
       const WebpackDevMiddleware = require('webpack-dev-middleware')
       const WebpackHotMiddleware = require('webpack-hot-middleware')
-      const webpackConfig = require('../webpack.config')
+      const webpackConfig = require('../../client/webpack.config')
 
       const compiler = Webpack(webpackConfig(process.env))
       app.use(WebpackDevMiddleware(compiler, {

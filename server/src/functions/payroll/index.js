@@ -1,9 +1,11 @@
 import _ from 'lodash'
 import fs from 'fs'
 import path from 'path'
+
+import { USER_STORAGE_PATH } from '../../config/storage'
 import { generateAttendancePayrollFile, generateIncomePayrollFile } from './generators'
 
-export const PAYROLL_FILE_STORAGE_PATH = path.resolve(__dirname, '../../resources/payroll/files')
+export const PAYROLL_FILE_STORAGE_PATH = `${USER_STORAGE_PATH}/payroll/files/`
 
 export const VALID_FILE_TYPES = [
   'attendance',

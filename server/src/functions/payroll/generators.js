@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 
+import { USER_STORAGE_PATH } from '../../config/storage'
 import { createCsvFile } from '../../utils/csv'
 import { calculateEmployeeAttendances } from '../attendance'
 import {
@@ -11,7 +12,7 @@ import {
   increaseWhenShiftNotMatchedOnAttendanceMonth,
 } from '../attendance/calculators'
 
-const PAYROLL_FILE_TEMP_PATH = path.resolve(__dirname, '../../resources/payroll/temp')
+const PAYROLL_FILE_TEMP_PATH = `${USER_STORAGE_PATH}/payroll/temp/`
 
 const _generateTempFilePath = () => {
   fs.mkdirSync(PAYROLL_FILE_TEMP_PATH, { recursive: true })

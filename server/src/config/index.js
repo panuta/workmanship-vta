@@ -1,5 +1,3 @@
-import path from 'path'
-
 let config
 
 export function initConfig() {
@@ -8,7 +6,6 @@ export function initConfig() {
       DEV: false,
       PORT: 3000,
       allowReplaceDailyUpload: false,
-      databaseStorage: path.resolve(__dirname, '../database.sqlite'),
       databaseTimestamps: true
     },
     dev: {

@@ -4,20 +4,20 @@ const Webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
-const ROOT_PATH = path.resolve(__dirname);
-const OUTPUT_PATH = path.resolve(ROOT_PATH, 'dist');
+const ROOT_PATH = path.resolve(__dirname)
+const OUTPUT_PATH = path.resolve(ROOT_PATH, 'dist')
 
 module.exports = (env = {}) => {
-  const isDevelopment = process.env.NODE_ENV !== 'production';
+  const isDevelopment = process.env.NODE_ENV !== 'production'
 
-  const entries = ['./client/src/index.js'];
+  const entries = ['../client/src/index.js']  // Must use ../client/
   const plugins = [
     new Webpack.DefinePlugin({ 'process.env.NODE_ENV': JSON.stringify((isDevelopment) ? 'development' : 'production') }),
     new HtmlWebpackPlugin({
-      template: './client/public/index.html',
+      template: '../client/public/index.html',  // Must use ../client/
       showErrors: true
     })
-  ];
+  ]
 
   if (isDevelopment) {
     entries.unshift('webpack-hot-middleware/client?reload=true');
@@ -30,6 +30,7 @@ module.exports = (env = {}) => {
     mode: (isDevelopment) ? 'development' : 'production',
     output: {
       path: OUTPUT_PATH,
+      publicPath: '/',
       filename: 'vta.bundle.js'
     },
     module: {
@@ -63,5 +64,5 @@ module.exports = (env = {}) => {
       ]
     },
     plugins: plugins
-  };
-};
+  }
+}

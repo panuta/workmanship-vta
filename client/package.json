@@ -1,8 +1,7 @@
 {
   "name": "workmanship-vta",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
-  "homepage": "/client/",
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
     "@testing-library/jest-dom": "^4.2.4",
@@ -17,6 +16,10 @@
     "react-router-cache-route": "^1.10.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3"
+  },
+  "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.4.2",
+    "react-refresh": "^0.8.3"
   },
   "resolutions": {
     "moment": "^2.28.0"

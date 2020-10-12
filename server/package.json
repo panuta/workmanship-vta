@@ -4,7 +4,7 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "dev": "BABEL_DISABLE_CACHE=1 npx nodemon server/index.js --exec \"npx babel-node\"",
+    "dev": "BABEL_DISABLE_CACHE=1 npx nodemon src/index.js --exec \"npx babel-node\"",
     "build": "babel server -d dist --copy-files",
     "start": "NODE_ENV=production node dist/index.js",
     "test": "jest"
@@ -25,7 +25,6 @@
     "@babel/node": "^7.10.5",
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-react": "^7.10.4",
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.4.2",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.3.0",
     "babel-loader": "^8.1.0",
