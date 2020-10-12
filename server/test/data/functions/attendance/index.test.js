@@ -5,8 +5,8 @@ import {
   getEmployeesAttendancesUntilAttendanceMonth
 } from '../../../../src/functions/attendance'
 import { getEmployees } from '../../../../src/functions/employee'
-import { toMomentObject } from '../../../../src/utils/date'
-import { increaseByValueUntilAttendanceMonth } from '../../../../src/functions/attendance/calculators'
+import { toMomentObject, utcDate } from '../../../../src/utils/date'
+import { increaseByValue } from '../../../../src/functions/attendance/calculators'
 
 jest.mock('../../../../src/config')
 jest.mock('../../../../src/functions/employee')
@@ -32,32 +32,32 @@ describe('Employee Attendance functions', () => {
   describe('getEmployeesAttendancesUntilAttendanceMonth function', () => {
     const setupEmployeesMockData = async () => {
       await EmployeeAttendance.bulkCreate([
-        { code: '1001', attendanceDate: new Date(2019, 11, 25), shift: 'A' },
-        { code: '1001', attendanceDate: new Date(2019, 11, 26), shift: 'A' },
-        { code: '1001', attendanceDate: new Date(2020, 8, 25), shift: 'A' },
-        { code: '1001', attendanceDate: new Date(2020, 8, 26), shift: 'A' },
-        { code: '1001', attendanceDate: new Date(2020, 11, 25), shift: 'A' },
-        { code: '1001', attendanceDate: new Date(2020, 11, 26), shift: 'A' },
+        { code: '1001', attendanceDate: utcDate(2019, 11, 25), shift: 'A' },
+        { code: '1001', attendanceDate: utcDate(2019, 11, 26), shift: 'A' },
+        { code: '1001', attendanceDate: utcDate(2020, 8, 25), shift: 'A' },
+        { code: '1001', attendanceDate: utcDate(2020, 8, 26), shift: 'A' },
+        { code: '1001', attendanceDate: utcDate(2020, 11, 25), shift: 'A' },
+        { code: '1001', attendanceDate: utcDate(2020, 11, 26), shift: 'A' },
 
-        { code: '1002', attendanceDate: new Date(2019, 11, 25), shift: 'A' },
-        { code: '1002', attendanceDate: new Date(2019, 11, 26), shift: 'A' },
-        { code: '1002', attendanceDate: new Date(2020, 8, 25), shift: 'A' },
-        { code: '1002', attendanceDate: new Date(2020, 8, 26), shift: 'A' },
-        { code: '1002', attendanceDate: new Date(2020, 11, 25), shift: 'A' },
-        { code: '1002', attendanceDate: new Date(2020, 11, 26), shift: 'A' },
+        { code: '1002', attendanceDate: utcDate(2019, 11, 25), shift: 'A' },
+        { code: '1002', attendanceDate: utcDate(2019, 11, 26), shift: 'A' },
+        { code: '1002', attendanceDate: utcDate(2020, 8, 25), shift: 'A' },
+        { code: '1002', attendanceDate: utcDate(2020, 8, 26), shift: 'A' },
+        { code: '1002', attendanceDate: utcDate(2020, 11, 25), shift: 'A' },
+        { code: '1002', attendanceDate: utcDate(2020, 11, 26), shift: 'A' },
 
-        { code: '1003', attendanceDate: new Date(2019, 11, 25), shift: 'A' },
-        { code: '1003', attendanceDate: new Date(2020, 11, 26), shift: 'A' },
+        { code: '1003', attendanceDate: utcDate(2019, 11, 25), shift: 'A' },
+        { code: '1003', attendanceDate: utcDate(2020, 11, 26), shift: 'A' },
 
-        { code: '1004', attendanceDate: new Date(2019, 11, 26), shift: 'A' },
-        { code: '1004', attendanceDate: new Date(2020, 11, 25), shift: 'A' },
+        { code: '1004', attendanceDate: utcDate(2019, 11, 26), shift: 'A' },
+        { code: '1004', attendanceDate: utcDate(2020, 11, 25), shift: 'A' },
       ])
     }
 
     it('should return from all employees', async () => {
       await setupEmployeesMockData()
 
-      const attendanceMonth = toMomentObject(new Date(Date.UTC(2020, 8, 1)))
+      const attendanceMonth = toMomentObject(utcDate(2020, 8, 1))
       await expect(
         getEmployeesAttendancesUntilAttendanceMonth(attendanceMonth)
       ).resolves.toMatchSnapshot()
@@ -66,7 +66,7 @@ describe('Employee Attendance functions', () => {
     it('should return from selected employees', async () => {
       await setupEmployeesMockData()
 
-      const attendanceMonth = toMomentObject(new Date(Date.UTC(2020, 8, 1)))
+      const attendanceMonth = toMomentObject(utcDate(2020, 8, 1))
       await expect(
         getEmployeesAttendancesUntilAttendanceMonth(attendanceMonth, ['1001', '1003'])
       ).resolves.toMatchSnapshot()
@@ -83,54 +83,54 @@ describe('Employee Attendance functions', () => {
       ])
 
       await EmployeeAttendance.bulkCreate([
-        { code: '1001', attendanceDate: new Date(2019, 11, 25),
+        { code: '1001', attendanceDate: utcDate(2019, 11, 25),
           shift: 'พักร้อน', notice: 1, compensation: 1, minutesLate: 10, minutesEarlyLeave: 20 },
-        { code: '1001', attendanceDate: new Date(2019, 11, 26),
+        { code: '1001', attendanceDate: utcDate(2019, 11, 26),
           shift: 'A', notice: 1, compensation: 0, minutesLate: 5, minutesEarlyLeave: 3 },
-        { code: '1001', attendanceDate: new Date(2019, 11, 27),
+        { code: '1001', attendanceDate: utcDate(2019, 11, 27),
           shift: 'ลากิจ', notice: 0, compensation: 0, minutesLate: 0, minutesEarlyLeave: 0 },
-        { code: '1001', attendanceDate: new Date(2019, 11, 28),
+        { code: '1001', attendanceDate: utcDate(2019, 11, 28),
           shift: 'ลาป่วย', notice: 0, compensation: 0, minutesLate: 0, minutesEarlyLeave: 0 },
-        { code: '1001', attendanceDate: new Date(2019, 11, 29),
+        { code: '1001', attendanceDate: utcDate(2019, 11, 29),
           shift: 'A', notice: 0, compensation: 1, minutesLate: 3, minutesEarlyLeave: 2 },
-        { code: '1001', attendanceDate: new Date(2020, 0, 1),
+        { code: '1001', attendanceDate: utcDate(2020, 0, 1),
           shift: 'พักร้อน', notice: 0, compensation: 0, minutesLate: 0, minutesEarlyLeave: 0 },
-        { code: '1001', attendanceDate: new Date(2020, 0, 2),
+        { code: '1001', attendanceDate: utcDate(2020, 0, 2),
           shift: 'ขาด', notice: 0, compensation: 0, minutesLate: 0, minutesEarlyLeave: 9 },
-        { code: '1001', attendanceDate: new Date(2020, 8, 3),
+        { code: '1001', attendanceDate: utcDate(2020, 8, 3),
           shift: 'ลาป่วย', notice: 0, compensation: 1, minutesLate: 5, minutesEarlyLeave: 7 },
-        { code: '1001', attendanceDate: new Date(2020, 11, 25),
+        { code: '1001', attendanceDate: utcDate(2020, 11, 25),
           shift: 'A', notice: 1, compensation: 0, minutesLate: 7, minutesEarlyLeave: 0 },
-        { code: '1001', attendanceDate: new Date(2020, 11, 26),
+        { code: '1001', attendanceDate: utcDate(2020, 11, 26),
           shift: 'ลากิจ', notice: 1, compensation: 1, minutesLate: 10, minutesEarlyLeave: 5 },
 
-        { code: '1002', attendanceDate: new Date(2019, 11, 25),
+        { code: '1002', attendanceDate: utcDate(2019, 11, 25),
           shift: 'พักร้อน', notice: 1, compensation: 1, minutesLate: 9, minutesEarlyLeave: 20 },
-        { code: '1002', attendanceDate: new Date(2019, 11, 26),
+        { code: '1002', attendanceDate: utcDate(2019, 11, 26),
           shift: 'A', notice: 0, compensation: 0, minutesLate: 0, minutesEarlyLeave: 0 },
-        { code: '1002', attendanceDate: new Date(2019, 11, 27),
+        { code: '1002', attendanceDate: utcDate(2019, 11, 27),
           shift: 'ลากิจ', notice: 0, compensation: 0, minutesLate: 0, minutesEarlyLeave: 0 },
-        { code: '1002', attendanceDate: new Date(2019, 11, 28),
+        { code: '1002', attendanceDate: utcDate(2019, 11, 28),
           shift: 'ลาป่วย', notice: 0, compensation: 0, minutesLate: 0, minutesEarlyLeave: 0 },
-        { code: '1002', attendanceDate: new Date(2019, 11, 29),
+        { code: '1002', attendanceDate: utcDate(2019, 11, 29),
           shift: 'A', notice: 0, compensation: 1, minutesLate: 3, minutesEarlyLeave: 0 },
-        { code: '1002', attendanceDate: new Date(2020, 0, 1),
+        { code: '1002', attendanceDate: utcDate(2020, 0, 1),
           shift: 'A', notice: 0, compensation: 0, minutesLate: 0, minutesEarlyLeave: 0 },
-        { code: '1002', attendanceDate: new Date(2020, 0, 2),
+        { code: '1002', attendanceDate: utcDate(2020, 0, 2),
           shift: 'A', notice: 0, compensation: 0, minutesLate: 10, minutesEarlyLeave: 4 },
-        { code: '1002', attendanceDate: new Date(2020, 8, 3),
+        { code: '1002', attendanceDate: utcDate(2020, 8, 3),
           shift: 'ลาป่วย', notice: 0, compensation: 1, minutesLate: 0, minutesEarlyLeave: 0 },
-        { code: '1002', attendanceDate: new Date(2020, 11, 25),
+        { code: '1002', attendanceDate: utcDate(2020, 11, 25),
           shift: 'A', notice: 0, compensation: 0, minutesLate: 0, minutesEarlyLeave: 0 },
-        { code: '1002', attendanceDate: new Date(2020, 11, 26),
+        { code: '1002', attendanceDate: utcDate(2020, 11, 26),
           shift: 'ลากิจ', notice: 1, compensation: 1, minutesLate: 10, minutesEarlyLeave: 5 },
       ])
 
-      const attendanceMonth = toMomentObject(new Date(Date.UTC(2020, 8, 1)))
+      const attendanceMonth = toMomentObject(utcDate(2020, 8, 1))
       const values = await calculateEmployeeAttendances(attendanceMonth, [
-        { fn: increaseByValueUntilAttendanceMonth, resultKey: 'notice', args: ['notice'] }
+        { fn: increaseByValue, resultKey: 'notice', args: ['notice'] }
       ])
-      // console.log(values)
+      console.log(values)
     })
   })
 

@@ -37,7 +37,7 @@ export const generateAttendancePayrollFile = async (attendanceMonth) => {
     { id: 'noShowHour', title: 'ขาดงาน(ชม)'},
     { id: 'noShowMinute', title: 'ขาดงาน(นาที)'},
     { id: 'noShowBaht', title: 'ขาดงาน(บาท)'},
-    { id: 'noPaidLeaveDay', title: 'ลาหักเงิน(วัน)'},  // ?????
+    { id: 'noPaidLeaveDay', title: 'ลาหักเงิน(วัน)'},  // Calculated
     { id: 'noPaidLeaveHour', title: 'ลาหักเงิน(ชม)'},  // ?????
     { id: 'noPaidLeaveMinute', title: 'ลาหักเงิน(นาที)'},
     { id: 'periodPay', title: 'ค่ากะ'},

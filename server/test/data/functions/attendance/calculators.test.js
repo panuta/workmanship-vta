@@ -108,7 +108,7 @@ describe('Attendance calculators', () => {
         result = increaseWhenShiftNotMatchedOnAttendanceMonth(attendance, result, attendanceMonth, ['A', 'B'])
       })
 
-      expect(result).toEqual(1)
+      expect(result).toEqual(2)
     })
   })
 })

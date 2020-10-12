@@ -89,7 +89,6 @@ export const uploadMonthlyFile = async (req, res, next) => {
   res.status(200).json({ status: 'SUCCESS' })
 }
 
-
 export const employeesAttendancesPage = async (req, res, next) => {
   const attendanceMonth = parseMonthYearQueryParameter(req.query)
 
@@ -193,6 +192,8 @@ export const deleteEverything = async (req, res, next) => {
   await Shift.destroy({ truncate: true })
   await Employee.destroy({ truncate: true })
   await EmployeeAttendance.destroy({ truncate: true })
+
+  // TODO : Delete files
 
   res.status(200).json({
     status: 'OK'
