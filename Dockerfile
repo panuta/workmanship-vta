@@ -39,8 +39,8 @@ WORKDIR /usr/app
 COPY --from=build /usr/src/server/dist ./dist
 
 # Copy client files
-RUN mkdir -p /usr/app/dist/static/client
-COPY --from=build /usr/src/client/build ./dist/static/client/
+RUN mkdir -p /usr/app/dist/static
+COPY --from=build /usr/src/client/build ./dist/static/
 
 COPY ./server/package.json .
 

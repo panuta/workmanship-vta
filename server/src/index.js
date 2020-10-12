@@ -64,7 +64,7 @@ export default init()
 
     } else {
       app.get('*', (req, res, next) => {
-        res.sendFile(path.join(__dirname, './static/client/index.html'))
+        res.sendFile(path.join(__dirname, './static/index.html'))
       })
     }
 
