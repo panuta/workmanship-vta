@@ -30,7 +30,7 @@ const TABLE_COLUMNS = [
         return (
           <Space className="payroll-downloads">
             <Link className="ant-btn" to={`/download/payroll?file=attendance&month=${attendanceMonthString}`} target="_blank" download><DownloadOutlined /> ไฟล์ข้อมูลเวลาทำงาน</Link>
-            <Link className="ant-btn" to={`/download/payroll?file=income&month=${attendanceMonthString}`} target="_blank" download><DownloadOutlined /> ไฟล์รายได้-เบี้ยเลี้ยง</Link>
+            {/*<Link className="ant-btn" to={`/download/payroll?file=income&month=${attendanceMonthString}`} target="_blank" download><DownloadOutlined /> ไฟล์รายได้-เบี้ยเลี้ยง</Link>*/}
             { record.status === 'incomplete' ? <span className="downloads-incomplete"><WarningOutlined /> ยังมีข้อมูลไม่ครบเดือน</span> : ''}
           </Space>
         )

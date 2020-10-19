@@ -90,7 +90,7 @@ export const generateAttendancePayrollFile = async (attendanceMonth) => {
   const monthNumber = attendanceMonth.month() + 1
 
   const records = employeesAttendances.map(employeeAttendances => ({
-    code: employeeAttendances.code,
+    code: employeeAttendances.employee.code,
     month: monthNumber,
     period: '1',
     workDay: employeeAttendances.workDay,
