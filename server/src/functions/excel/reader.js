@@ -22,10 +22,10 @@ class ExcelReader {
   readShifts() {
     const worksheet = this.workbook.Sheets[this.workbook.SheetNames[1]]
     const columns = [
-      { key: 'code', range: 'A5:A65' },
-      { key: 'start', range: 'B5:B65', parser: cell => cell.w },
-      { key: 'end', range: 'C5:C65', parser: cell => cell.w },
-      { key: 'break', range: 'D5:D65', parser: cell => parseDurationCell(cell.w) },
+      { key: 'code', range: 'A4:A65' },
+      { key: 'start', range: 'B4:B65', parser: cell => cell.w },
+      { key: 'end', range: 'C4:C65', parser: cell => cell.w },
+      { key: 'break', range: 'D4:D65', parser: cell => parseDurationCell(cell.w) },
     ]
 
     const shiftData = readColumnsData(worksheet, columns)
@@ -38,8 +38,8 @@ class ExcelReader {
    * @returns [ { code, salutation, fullName, nickName, company ... } ]
    */
   readEmployees() {
-    const START_ROW = 4
-    const MAX_EMPLOYEE_ROWS = 200
+    const START_ROW = 107
+    const MAX_EMPLOYEE_ROWS = 250
 
     const worksheet = this.workbook.Sheets[this.workbook.SheetNames[0]]
     const columns = [
@@ -70,9 +70,9 @@ class ExcelReader {
     const WORKSHEET_INDEX = 1  // 2.schedule-ตารางกะ
     const START_ROW = 5
     const MAX_EMPLOYEE_ROWS = 200
-    const CODE_COLUMN = 'F'
-    const SHIFT_START_COLUMN = 'L'
-    const SHIFT_END_COLUMN = 'AP'
+    const CODE_COLUMN = 'I'
+    const SHIFT_START_COLUMN = 'O'
+    const SHIFT_END_COLUMN = 'AS'
 
     const worksheet = this.workbook.Sheets[this.workbook.SheetNames[WORKSHEET_INDEX]]
 
@@ -110,7 +110,7 @@ class ExcelReader {
         consecutiveBlankCells += 1
       }
       checkingDateColumnIndex += 1
-    } while (consecutiveBlankCells < 30)
+    } while (consecutiveBlankCells < 40)
 
     // Map date cell column index to reading column range
     const extractingColumns = [

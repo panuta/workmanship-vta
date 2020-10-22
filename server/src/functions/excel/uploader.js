@@ -45,7 +45,7 @@ export const uploadExcelFile = async (dataSourceDate, file) => {
 
   if(_.intersection(excelWorkbook.SheetNames, [
     '1.Employee',
-    '2.Schedule-ตารางกะ',
+    '2.schedule-ตารางกะ',
     '5.INPUT-Daily'
   ]).length !== 3) {
     throw Error('Upload file is missing some required worksheets')
