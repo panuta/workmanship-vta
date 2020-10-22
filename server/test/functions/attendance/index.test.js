@@ -1,15 +1,15 @@
-import Config from '../../../../src/config'
-import { initDatabase, EmployeeAttendance, closeDatabase, Employee } from '../../../../src/data/models'
+import Config from '../../../src/config'
+import { initDatabase, EmployeeAttendance, closeDatabase, Employee } from '../../../src/data/models'
 import {
   calculateEmployeeAttendances,
   getEmployeesAttendancesUntilAttendanceMonth
-} from '../../../../src/functions/attendance'
-import { getEmployees } from '../../../../src/functions/employee'
-import { toMomentObject, utcDate } from '../../../../src/utils/date'
-import { increaseByValue } from '../../../../src/functions/attendance/calculators'
+} from '../../../src/functions/attendance'
+import { getEmployees } from '../../../src/functions/employee'
+import { toMomentObject, utcDate } from '../../../src/utils/date'
+import { increaseByValue } from '../../../src/functions/attendance/calculators'
 
-jest.mock('../../../../src/config')
-jest.mock('../../../../src/functions/employee')
+jest.mock('../../../src/config')
+jest.mock('../../../src/functions/employee')
 
 describe('Employee Attendance functions', () => {
   beforeAll(async () => {

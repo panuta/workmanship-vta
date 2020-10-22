@@ -4,9 +4,9 @@ import {
   increaseWhenShiftMatched,
   increaseWhenShiftMatchedOnAttendanceMonth,
   increaseWhenShiftNotMatchedOnAttendanceMonth
-} from '../../../../src/functions/attendance/calculators'
-import { toAttendanceMonth } from '../../../../src/utils/attendanceMonth'
-import { utcDate } from '../../../../src/utils/date'
+} from '../../../src/functions/attendance/calculators'
+import { toAttendanceMonth } from '../../../src/utils/attendanceMonth'
+import { utcDate } from '../../../src/utils/date'
 
 describe('Attendance calculators', () => {
   describe('increaseByValue function', () => {

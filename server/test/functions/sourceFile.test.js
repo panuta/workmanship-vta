@@ -1,8 +1,8 @@
-import Config from '../../../src/config'
-import { initDatabase, dropDatabase, SourceFile } from '../../../src/data/models'
-import { getLatestSourceFile } from '../../../src/functions/sourceFile'
+import Config from '../../src/config'
+import { initDatabase, dropDatabase, SourceFile } from '../../src/data/models'
+import { getLatestSourceFile } from '../../src/functions/sourceFile'
 
-jest.mock('../../../src/config')
+jest.mock('../../src/config')
 
 describe('Employee functions', () => {
   beforeAll(async () => {

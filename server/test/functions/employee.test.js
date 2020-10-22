@@ -1,10 +1,10 @@
 import moment from 'moment'
 
-import Config from '../../../src/config'
-import { initDatabase, dropDatabase, Employee } from '../../../src/data/models'
-import { getEmployees } from '../../../src/functions/employee'
+import Config from '../../src/config'
+import { initDatabase, dropDatabase, Employee } from '../../src/data/models'
+import { getEmployees } from '../../src/functions/employee'
 
-jest.mock('../../../src/config')
+jest.mock('../../src/config')
 
 describe('Employee functions', () => {
   beforeAll(async () => {
