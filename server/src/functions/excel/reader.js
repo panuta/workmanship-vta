@@ -1,7 +1,14 @@
-import _ from 'lodash'
+import { slice } from 'lodash'
 import XLSX from 'xlsx'
-import { generateColumnRange, parseDate, parseInteger, readCellValue, readColumnsData } from './utils'
-import { parseDuration } from '../../utils/date'
+import {
+  generateColumnRange,
+  parseDateTimeCell,
+  parseDurationCell,
+  parseIntegerCell,
+  parseTimeCell,
+  readCellValue,
+  readColumnsData
+} from './utils'
 
 class ExcelReader {
   constructor(filePath) {
@@ -18,7 +25,7 @@ class ExcelReader {
       { key: 'code', range: 'A5:A65' },
       { key: 'start', range: 'B5:B65', parser: cell => cell.w },
       { key: 'end', range: 'C5:C65', parser: cell => cell.w },
-      { key: 'break', range: 'D5:D65', parser: cell => parseDuration(cell.w) },
+      { key: 'break', range: 'D5:D65', parser: cell => parseDurationCell(cell.w) },
     ]
 
     const shiftData = readColumnsData(worksheet, columns)
@@ -44,8 +51,8 @@ class ExcelReader {
       { key: 'status', range: `G${START_ROW}:G${START_ROW + MAX_EMPLOYEE_ROWS}` },
       { key: 'department', range: `H${START_ROW}:H${START_ROW + MAX_EMPLOYEE_ROWS}` },
       { key: 'position', range: `I${START_ROW}:I${START_ROW + MAX_EMPLOYEE_ROWS}` },
-      { key: 'startDate', range: `J${START_ROW}:J${START_ROW + MAX_EMPLOYEE_ROWS}`, parser: cell => parseDate(cell.w, 'M/D/YY') },
-      { key: 'terminationDate', range: `K${START_ROW}:K${START_ROW + MAX_EMPLOYEE_ROWS}`, parser: cell => parseDate(cell.w, 'M/D/YY') },
+      { key: 'startDate', range: `J${START_ROW}:J${START_ROW + MAX_EMPLOYEE_ROWS}`, parser: cell => parseDateTimeCell(cell.w, 'M/D/YY') },
+      { key: 'terminationDate', range: `K${START_ROW}:K${START_ROW + MAX_EMPLOYEE_ROWS}`, parser: cell => parseDateTimeCell(cell.w, 'M/D/YY') },
     ]
 
     const employeeData = readColumnsData(worksheet, columns)
@@ -71,7 +78,7 @@ class ExcelReader {
 
     // Slicing for columns fromDay - toDay
     const columns = [ { key: 'code', range: `${CODE_COLUMN}${START_ROW}:${CODE_COLUMN}${START_ROW + MAX_EMPLOYEE_ROWS}` } ].concat(
-      _.slice(generateColumnRange(SHIFT_START_COLUMN, SHIFT_END_COLUMN), fromDateNumber - 1, toDateNumber).map((col, i) => {
+      slice(generateColumnRange(SHIFT_START_COLUMN, SHIFT_END_COLUMN), fromDateNumber - 1, toDateNumber).map((col, i) => {
         return { key: `${fromDateNumber + i}`, range: `${col}${START_ROW}:${col}${START_ROW + MAX_EMPLOYEE_ROWS}` }
       })
     )
@@ -93,7 +100,7 @@ class ExcelReader {
     let consecutiveBlankCells = 0
     do {
       const dateCellValue = readCellValue(worksheet, XLSX.utils.encode_cell({ c: checkingDateColumnIndex, r: FIRST_DATE_CELL.r }))
-      const dateCellNumValue = parseInteger(dateCellValue, null)
+      const dateCellNumValue = parseIntegerCell(dateCellValue, null)
       if(dateCellNumValue !== null) {
         consecutiveBlankCells = 0
         if(dateCellNumValue >= fromDateNumber && dateCellNumValue <= toDateNumber) {
@@ -115,19 +122,43 @@ class ExcelReader {
         const headerValue = readCellValue(worksheet, XLSX.utils.encode_cell({ c: checkingColumnIndex, r: FIRST_DATE_CELL.r + 1 }))
         const range = `${XLSX.utils.encode_cell({ c: checkingColumnIndex, r: FIRST_DATE_CELL.r + 3 })}:${XLSX.utils.encode_cell({ c: checkingColumnIndex, r: FIRST_DATE_CELL.r + 3 + MAX_EMPLOYEE_ROWS })}`
 
-        if(headerValue === 'สาย') {
-          extractingColumns.push({ key: `${fromDateNumber + i}.minutesLate`, range, parser: cell => parseDuration(cell.w) })
+        if(headerValue === 'เวลาทำงานตามกะ') {
+          checkingColumnIndex += 1
+          const nextRange = `${XLSX.utils.encode_cell({ c: checkingColumnIndex, r: FIRST_DATE_CELL.r + 3 })}:${XLSX.utils.encode_cell({ c: checkingColumnIndex, r: FIRST_DATE_CELL.r + 3 + MAX_EMPLOYEE_ROWS })}`
+          extractingColumns.push({ key: `${fromDateNumber + i}.shiftIn`, range, parser: cell => parseTimeCell(cell.w) })
+          extractingColumns.push({ key: `${fromDateNumber + i}.shiftOut`, range: nextRange, parser: cell => parseTimeCell(cell.w) })
+
+        } else if(headerValue === 'เวลาหน้าป้อม') {
+          checkingColumnIndex += 1
+          const nextRange = `${XLSX.utils.encode_cell({ c: checkingColumnIndex, r: FIRST_DATE_CELL.r + 3 })}:${XLSX.utils.encode_cell({ c: checkingColumnIndex, r: FIRST_DATE_CELL.r + 3 + MAX_EMPLOYEE_ROWS })}`
+          extractingColumns.push({ key: `${fromDateNumber + i}.faceScanInEntrance`, range, parser: cell => parseTimeCell(cell.w) })
+          extractingColumns.push({ key: `${fromDateNumber + i}.faceScanOutEntrance`, range: nextRange, parser: cell => parseTimeCell(cell.w) })
+
+        } else if(headerValue === 'เวลาหน้า Office') {
+          checkingColumnIndex += 1
+          const nextRange = `${XLSX.utils.encode_cell({ c: checkingColumnIndex, r: FIRST_DATE_CELL.r + 3 })}:${XLSX.utils.encode_cell({ c: checkingColumnIndex, r: FIRST_DATE_CELL.r + 3 + MAX_EMPLOYEE_ROWS })}`
+          extractingColumns.push({ key: `${fromDateNumber + i}.faceScanInOffice`, range, parser: cell => parseTimeCell(cell.w) })
+          extractingColumns.push({ key: `${fromDateNumber + i}.faceScanOutOffice`, range: nextRange, parser: cell => parseTimeCell(cell.w) })
+
+        } else if(headerValue === 'สาย') {
+          extractingColumns.push({ key: `${fromDateNumber + i}.minutesLate`, range, parser: cell => parseDurationCell(cell.w) })
+
         } else if(headerValue === 'ออกก่อน') {
-          extractingColumns.push({ key: `${fromDateNumber + i}.minutesEarlyLeft`, range, parser: cell => parseDuration(cell.w) })
+          extractingColumns.push({ key: `${fromDateNumber + i}.minutesEarlyLeft`, range, parser: cell => parseDurationCell(cell.w) })
+
         } else if(headerValue === 'OT') {
-          extractingColumns.push({ key: `${fromDateNumber + i}.overtime`, range, parser: cell => parseDuration(cell.w) })
+          extractingColumns.push({ key: `${fromDateNumber + i}.overtime`, range, parser: cell => parseDurationCell(cell.w) })
+
         } else if(headerValue === 'สะสม') {
           extractingColumns.push({ key: `${fromDateNumber + i}.compensation`, range })
+
         } else if(headerValue === 'ใบเตือน') {
           extractingColumns.push({ key: `${fromDateNumber + i}.notice`, range })
+
         } else if(headerValue === 'หมายเหตุ') {
           break
         }
+
         checkingColumnIndex += 1
         // eslint-disable-next-line no-constant-condition
       } while(true)

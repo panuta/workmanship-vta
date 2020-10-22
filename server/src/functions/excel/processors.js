@@ -49,13 +49,18 @@ const _processData = async (reader, fromDate, toDate) => {
   employeesInputDailyData.forEach(employeeInputDailyData => {
     const employeeCode = employeeInputDailyData.code
     _.range(1, 32).forEach(date => {
-
       const setValue = name => {
         const key = `${date}.${name}`
         if(_.has(employeeInputDailyData, key) && employeeInputDailyData[key] !== null)
           _.set(employeeAttendanceMapping, [`${employeeCode}:${date}`, name], employeeInputDailyData[key])
       }
 
+      setValue('shiftIn')
+      setValue('shiftOut')
+      setValue('faceScanInEntrance')
+      setValue('faceScanOutEntrance')
+      setValue('faceScanInOffice')
+      setValue('faceScanOutOffice')
       setValue('minutesLate')
       setValue('minutesEarlyLeave')
       setValue('overtime')

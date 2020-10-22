@@ -1,5 +1,4 @@
 # startup-express-react
 
 TODO
-- Setup package.json scripts
-- Setup production
+- function to re-read source file (calculate again)
