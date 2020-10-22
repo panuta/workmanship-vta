@@ -5,7 +5,7 @@ services:
     build:
       context: .
     volumes:
-      - .storage:/usr/app/.storage
+      - .storage:/usr/app/server/.storage
     ports:
       - 80:3000
     environment:
