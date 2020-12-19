@@ -9,9 +9,11 @@ export const noShowAmount = (shiftMinutes, showMinutes) => {
 }
 
 export const effectiveLate = (lateMinutes) => {
-  if(lateMinutes <= 5) {
-    return 0
-  } else {
-    return lateMinutes - 5
-  }
+  // TODO
+  return lateMinutes
+  // if(lateMinutes <= 5) {
+  //   return 0
+  // } else {
+  //   return lateMinutes - 5
+  // }
 }

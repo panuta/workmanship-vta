@@ -5,6 +5,7 @@ import {
   parseDateTimeCell,
   parseDurationCell,
   parseIntegerCell,
+  parseMinutesLateCell,
   parseTimeCell,
   readCellValue,
   readColumnsData
@@ -141,7 +142,7 @@ class ExcelReader {
           extractingColumns.push({ key: `${fromDateNumber + i}.faceScanOutOffice`, range: nextRange, parser: cell => parseTimeCell(cell.w) })
 
         } else if(headerValue === 'สาย') {
-          extractingColumns.push({ key: `${fromDateNumber + i}.minutesLate`, range, parser: cell => parseDurationCell(cell.w) })
+          extractingColumns.push({ key: `${fromDateNumber + i}.minutesLate`, range, parser: cell => parseMinutesLateCell(cell.w) })
 
         } else if(headerValue === 'ออกก่อน') {
           extractingColumns.push({ key: `${fromDateNumber + i}.minutesEarlyLeft`, range, parser: cell => parseDurationCell(cell.w) })

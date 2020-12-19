@@ -69,6 +69,14 @@ export const parseDurationCell = (text, delimiter, fallbackValue = null) => {
   }
 }
 
+export const parseMinutesLateCell = (text, delimiter, fallbackValue = null) => {
+  const minutesLate = parseDurationCell(text, delimiter, fallbackValue)
+  if(minutesLate >= 5) {
+    return minutesLate - 5
+  }
+  return 0
+}
+
 /**
  * Parse cell containing integer number
  * @param str

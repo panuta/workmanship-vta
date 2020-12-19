@@ -24,8 +24,8 @@ export const generateAttendancePayrollFile = async (attendanceMonth) => {
       resultKey: 'workDay',
       fn: (attendance, currentValue, _attendanceMonth, shiftNames) => {
         // eslint-disable-next-line no-param-reassign
-        if(isNil(currentValue)) currentValue = _attendanceMonth.daysInMonth()
-        if(!shiftNames.includes(attendance.shift) && sameAttendanceMonth(attendance.attendanceDate, _attendanceMonth)) {
+        if(isNil(currentValue)) currentValue = _attendanceMonth.daysInMonth()  // TODO => attendance month = Oct and daysInMonth = 31 but in reality have to be 30 days
+        if(shiftNames.includes(attendance.shift) && sameAttendanceMonth(attendance.attendanceDate, _attendanceMonth)) {
           return currentValue - 1
         }
         return currentValue
